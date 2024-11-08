@@ -46,6 +46,12 @@ Matrix readfile(const char* filename) {
     matrix.buffer[i] = value;
   }
 
+  uint32_t multiplier = 1;
+  for (int32_t i = matrix.dimensions - 1; i >= 0; i--) {
+    matrix.submatrix_sizes[i] = multiplier;
+    multiplier *= matrix.sizes[i];
+  }
+
   fclose(file);
   return matrix;
 }

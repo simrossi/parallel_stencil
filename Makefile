@@ -5,7 +5,8 @@ SRC_DIR:=src
 BUILD_DIR:=build
 
 SRCS:=$(shell find $(SRC_DIR) -name '*.c')
-OBJS = $(patsubst $(SRC_DIR)/%.c, $(BUILD_DIR)/%.o, $(SRCS))
+OBJS:= $(patsubst $(SRC_DIR)/%.c, $(BUILD_DIR)/%.o, $(SRCS))
+OBJDIRS:=$(dir $(OBJS))
 
 EXEC:=stencil
 INPUT:=input
@@ -15,6 +16,7 @@ all: $(BUILD_DIR) $(EXEC)
 
 $(BUILD_DIR):
 	mkdir -p $(BUILD_DIR)
+	mkdir -p $(OBJDIRS)
 
 $(EXEC): $(OBJS)
 	$(CC) $(CFLAGS) -o $@ $^
