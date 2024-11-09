@@ -5,7 +5,7 @@
 #include "../types.h"
 #include "../matrix.h"
 
-void average(Matrix old_mat, Matrix new_mat, uint32_t offset, uint32_t range) {
+void sum(Matrix old_mat, Matrix new_mat, uint32_t offset, uint32_t range) {
   CELL_TYPE sum = 0;
   uint32_t indices[MAX_DIM];
   calculateIndices(old_mat, offset, indices);
@@ -19,5 +19,5 @@ void average(Matrix old_mat, Matrix new_mat, uint32_t offset, uint32_t range) {
     sum += cells[i].value;
   }
 
-  new_mat.buffer[offset] = sum / cell_num;
+  new_mat.buffer[offset] = sum;
 }

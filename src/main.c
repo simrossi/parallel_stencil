@@ -3,6 +3,7 @@
 #include <stdlib.h>
 
 #include "common.h"
+#include "matrix.h"
 #include "parser.h"
 #include "sequential.h"
 #include "types.h"
@@ -10,6 +11,7 @@
 
 // Stencils
 #include "stencils/average.h"
+#include "stencils/sum.h"
 
 #define ARG_SIZE 256
 //#define PARALLEL // Choose whether to perform stencil computations in parallel mode
@@ -27,7 +29,8 @@ int32_t main(int32_t argc, char** argv) {
   }
 
   Matrix matrix = readfile(argv[1]);
-  compute(matrix, average, STEPS);
+  printMatrix(matrix);
+  matrix = compute(matrix, average, STEPS);
 
   printMatrix(matrix);
   writefile(argv[2], matrix);

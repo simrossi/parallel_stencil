@@ -3,6 +3,6 @@
 
 #include "../types.h"
 
-void average(Matrix matrix, uint32_t range);
+void average(Matrix old_mat, Matrix new_mat, uint32_t offset, uint32_t range);
 
 #endif

@@ -33,6 +33,7 @@ Matrix readfile(const char* filename) {
   for (uint32_t i = 0; i < matrix.dimensions; i++) {
     size *= matrix.sizes[i];
   }
+  matrix.size = size;
 
   // Allocate contiguous array of cells
   matrix.buffer = malloc(size * sizeof(CELL_TYPE));
