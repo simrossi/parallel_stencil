@@ -2,6 +2,7 @@
 #include <string.h>
 
 #include "common.h"
+#include "sequential.h"
 #include "types.h"
 
 Matrix compute(Matrix matrix, void (*stencil)(Matrix, Matrix, uint32_t, uint32_t), uint32_t steps) {

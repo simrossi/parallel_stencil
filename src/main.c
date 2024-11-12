@@ -36,5 +36,5 @@ int32_t main(int32_t argc, char** argv) {
   writefile(argv[2], matrix);
 
   free(matrix.buffer);
-	exit(0);
+  exit(0);
 }
