@@ -29,10 +29,10 @@ int32_t main(int32_t argc, char** argv) {
   }
 
   Matrix matrix = readfile(argv[1]);
-  printMatrix(matrix);
+  //printMatrix(matrix);
   matrix = compute(matrix, average, STEPS);
 
-  printMatrix(matrix);
+  //printMatrix(matrix);
   writefile(argv[2], matrix);
 
   free(matrix.buffer);
