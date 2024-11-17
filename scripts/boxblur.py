@@ -68,7 +68,7 @@ def filesToImage():
     def read_channel(file_name):
         with open(file_name, 'r') as file:
             width, height = map(int, file.readline().split())
-            channel_data = [int(x) for line in file for x in line.split()]
+            channel_data = [int(float(x)) for line in file for x in line.split()]
         return width, height, channel_data
 
     # Read the RGB channels

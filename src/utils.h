@@ -3,6 +3,6 @@
 
 #include "types.h"
 
-void printMatrix(Matrix matrix);
+void print_matrix(const Matrix matrix);
 
 #endif

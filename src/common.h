@@ -1,8 +1,16 @@
 #ifndef COMMON_H
 #define COMMON_H
 
-#define MAX_DIM 32 // Define max number of dimensions
-#define STENCIL_SIZE 2 // Size of the stencil
-#define STEPS 1 // Number of iterations
+#ifndef MAX_DIMS
+#define MAX_DIMS 4 // Maximum number of dimensions
+#endif
+
+#ifndef STENCIL_SIZE
+#define STENCIL_SIZE 3 // Size of the stencil
+#endif
+
+#ifndef ITERATIONS
+#define ITERATIONS 1 // Number of iterations to compute
+#endif
 
 #endif

@@ -1,80 +1,82 @@
 #include <stdio.h>
-#include <stdint.h>
 #include <stdlib.h>
 #include <string.h>
-
 #include "common.h"
 #include "parser.h"
+#include "types.h"
 
-Matrix readfile(const char* filename) {
+Matrix read_file(const char* filename);
+void write_file(const Matrix matrix, const char* filename);
+
+Matrix read_file(const char* filename) {
   Matrix matrix;
-
+  char line[MAX_LINE_LENGTH];
+  const char* delimiter = " ";
   FILE* file = fopen(filename, "r");
+
   if (!file) {
-    fprintf(stderr, "Failed to open file: %s\n", filename);
+    fprintf(stderr, "Error opening input file: %s\n", filename);
     exit(1);
   }
 
-  char line[LINE_DIM];
-  const char* delimiter = " ";
-
-  // Read first line and store the dimensions sizes
+  // Read and store dimensions sizes
   matrix.dimensions = 0;
   if (fgets(line, sizeof(line), file) != NULL) {
     char* token = strtok(line, delimiter);
-    while (token != NULL && matrix.dimensions < MAX_DIM) {
-      matrix.sizes[(matrix.dimensions)++] = atoi(token);
+    while (token != NULL && matrix.dimensions < MAX_DIMS) {
+      matrix.sizes[matrix.dimensions++] = atoi(token);
       token = strtok(NULL, delimiter);
     }
   }
 
-  // Count the total number of cells
-  uint32_t size = 1;
-  for (uint32_t i = 0; i < matrix.dimensions; i++) {
-    size *= matrix.sizes[i];
+  // Compute total number of elements and submatrices sizes
+  uint32_t total_size = 1;
+  for (int32_t i = matrix.dimensions - 1; i >= 0; i--) {
+    matrix.submat_sizes[i] = total_size;
+    total_size *= matrix.sizes[i];
   }
-  matrix.size = size;
 
-  // Allocate contiguous array of cells
-  matrix.buffer = malloc(size * sizeof(CELL_TYPE));
-  if (matrix.buffer == NULL) {
-    fprintf(stderr, "Memory allocation failed\n");
+  // Allocate contiguous data buffer
+  matrix.total_size = total_size;
+  matrix.data = malloc(total_size * sizeof(float));
+  if (matrix.data == NULL) {
+    fprintf(stderr, "Error while allocating matrix data\n");
     exit(1);
   }
 
-  CELL_TYPE value;
-  for (uint32_t i = 0; i < size && fscanf(file, "%d", &value) == 1; i++) {
-    matrix.buffer[i] = value;
-  }
+  // Read and store data
+  for (uint32_t i = 0; i < total_size; i++) {
+    float value;
+    if (fscanf(file, "%f", &value) == EOF) {
+      fprintf(stderr, "Unsufficient number of values provided\n");
+      exit(1);
+    }
 
-  uint32_t multiplier = 1;
-  for (int32_t i = matrix.dimensions - 1; i >= 0; i--) {
-    matrix.submatrix_sizes[i] = multiplier;
-    multiplier *= matrix.sizes[i];
+    matrix.data[i] = value;
   }
 
   fclose(file);
   return matrix;
 }
 
-void writefile(const char* filename, Matrix matrix) {
+void write_file(const Matrix matrix, const char* filename) {
   FILE* file = fopen(filename, "w");
+
   if (!file) {
-    fprintf(stderr, "Failed to open file: %s\n", filename);
+    fprintf(stderr, "Error opening output file: %s\n", filename);
     exit(1);
   }
 
-  uint32_t cell_num = 1;
+  // Write dimensions sizes
   for (uint32_t i = 0; i < matrix.dimensions; i++) {
-    cell_num *= matrix.sizes[i];
-
     const char* delimiter = (i != matrix.dimensions - 1 ? " " : "\n");
     fprintf(file, "%d%s", matrix.sizes[i], delimiter);
   }
 
-  for (uint32_t i = 0; i < cell_num; i++) {
-    const char* delimiter = (i != cell_num - 1 ? " " : "\n");
-    fprintf(file, "%d%s", matrix.buffer[i], delimiter);
+  // Write data
+  for (uint32_t i = 0; i < matrix.total_size; i++) {
+    const char* delimiter = (i != matrix.total_size - 1 ? " " : "\n");
+    fprintf(file, "%f%s", matrix.data[i], delimiter);
   }
 
   fclose(file);

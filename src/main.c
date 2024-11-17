@@ -1,40 +1,41 @@
 #include <stdio.h>
-#include <stdint.h>
 #include <stdlib.h>
-
 #include "common.h"
-#include "matrix.h"
 #include "parser.h"
-#include "sequential.h"
 #include "types.h"
 #include "utils.h"
 
-// Stencils
-#include "stencils/average.h"
-#include "stencils/sum.h"
-
-#define ARG_SIZE 256
-//#define PARALLEL // Choose whether to perform stencil computations in parallel mode
-
-#ifndef PARALLEL
-#include "sequential.h"
-#else
+// #define PARALLEL // Perform parallel stencil computation
+#ifdef PARALLEL
 #include "parallel.h"
+#else
+#include "sequential.h"
 #endif
 
 int32_t main(int32_t argc, char** argv) {
+  // Specify stencil properties
+  const Stencil stencil = {
+    .size = STENCIL_SIZE,
+    .type = MOORE,
+    .operation = SUM,
+  };
+
   if (argc != 3) {
     printf("Usage: ./stencil <input> <output>\n");
     exit(1);
   }
 
-  Matrix matrix = readfile(argv[1]);
-  //printMatrix(matrix);
-  matrix = compute(matrix, average, STEPS);
+  Matrix matrix = read_file(argv[1]);
+  print_matrix(matrix);
+  
+  // Compute specified number of iterations
+  for (uint32_t i = 0; i < ITERATIONS; i++) {
+    matrix = compute(matrix, stencil);
+  }
 
-  //printMatrix(matrix);
-  writefile(argv[2], matrix);
+  print_matrix(matrix);
+  write_file(matrix, argv[2]);
 
-  free(matrix.buffer);
-  exit(0);
+  free(matrix.data);
+  return 0;
 }

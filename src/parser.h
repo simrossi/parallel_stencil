@@ -1,11 +1,11 @@
 #ifndef PARSER_H
 #define PARSER_H
 
-#define LINE_DIM 256 // Define max number of characters in header line
+#define MAX_LINE_LENGTH 256
 
 #include "types.h"
 
-Matrix readfile(const char* filename);
-void writefile(const char* filename, Matrix matrix);
+Matrix read_file(const char* filename);
+void write_file(const Matrix matrix, const char* filename);
 
 #endif
