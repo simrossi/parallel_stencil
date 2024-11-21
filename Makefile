@@ -1,5 +1,6 @@
 CC:=gcc
-CFLAGS:=-Wall -Wextra
+CFLAGS:=-Wall -Wextra -fopenmp
+LDFLAGS:=-lm
 
 SRC_DIR:=src
 BUILD_DIR:=build
@@ -19,7 +20,7 @@ $(BUILD_DIR):
 	mkdir -p $(OBJDIRS)
 
 $(EXEC): $(OBJS)
-	$(CC) $(CFLAGS) -o $@ $^
+	$(CC) $(CFLAGS) -o $@ $^ $(LDFLAGS)
 
 $(BUILD_DIR)/%.o: $(SRC_DIR)/%.c
 	$(CC) $(CFLAGS) -c $< -o $@
