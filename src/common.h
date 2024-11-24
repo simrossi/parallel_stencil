@@ -10,7 +10,11 @@
 #endif
 
 #ifndef ITERATIONS
-#define ITERATIONS 1 // Number of iterations to compute
+#define ITERATIONS 10 // Number of iterations to compute
+#endif
+
+#ifndef LOG_FILE
+#define LOG_FILE "log.txt" // Log file location
 #endif
 
 #endif

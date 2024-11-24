@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include "common.h"
+#include "log.h"
 #include "parser.h"
 #include "types.h"
 #include "utils.h"
@@ -13,6 +13,8 @@
 #endif
 
 int32_t main(int32_t argc, char** argv) {
+  log_init();
+
   // Specify stencil properties
   const Stencil stencil = {
     .size = STENCIL_SIZE,
@@ -29,13 +31,13 @@ int32_t main(int32_t argc, char** argv) {
   print_matrix(matrix);
   
   // Compute specified number of iterations
-  for (uint32_t i = 0; i < ITERATIONS; i++) {
-    matrix = compute(matrix, stencil);
-  }
+  matrix = compute(matrix, stencil);
 
   print_matrix(matrix);
   write_file(matrix, argv[2]);
 
+  log_cleanup();
   free(matrix.data);
   return 0;
 }
+
