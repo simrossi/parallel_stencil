@@ -31,6 +31,17 @@ The program processes an input file containing a matrix and generates an output 
 ```
 To change the stencil modify the stencil variable in `src/main.c`.
 
+### Executing program on image
+
+The best way to have a visual result is to run the code on an input image and see how it is modified based on the stencil used.
+Inside the folder `scripts`, an ad-hoc python script has been written for this purpose.
+
+```
+./boxblur.py ../stencil <img_name> <output_dir>
+```
+
+The line above will run the stencil program on the input image generating as output, in the defined folder, another image to which the stencil has been applied.
+
 ### Expand program
 
 The program can be expanded by adding new stencil operations and neighborhoods.

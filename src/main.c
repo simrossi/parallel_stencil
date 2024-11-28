@@ -18,7 +18,8 @@ int32_t main(int32_t argc, char** argv) {
   // Specify stencil properties
   const Stencil stencil = {
     .size = STENCIL_SIZE,
-    .type = MOORE,
+    .range = STENCIL_RANGE,
+    .type = VON_NEUMANN,
     .operation = SUM,
   };
 
@@ -28,12 +29,12 @@ int32_t main(int32_t argc, char** argv) {
   }
 
   Matrix matrix = read_file(argv[1]);
-  print_matrix(matrix);
+  //print_matrix(matrix);
   
   // Compute specified number of iterations
   matrix = compute(matrix, stencil);
 
-  print_matrix(matrix);
+  //print_matrix(matrix);
   write_file(matrix, argv[2]);
 
   log_cleanup();
