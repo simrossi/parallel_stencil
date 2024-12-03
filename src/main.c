@@ -1,7 +1,10 @@
+#include <stdint.h>
 #include <stdio.h>
-#include <stdlib.h>
 #include "log.h"
+#include "operations.h"
 #include "parser.h"
+#include "patterns.h"
+#include "stencil.h"
 #include "types.h"
 #include "utils.h"
 
@@ -13,32 +16,24 @@
 #endif
 
 int32_t main(int32_t argc, char** argv) {
-  log_init();
+    char* input_file = NULL;
+    char* output_file = NULL;
+    char* log_file = NULL;
 
-  // Specify stencil properties
-  const Stencil stencil = {
-    .size = STENCIL_SIZE,
-    .range = STENCIL_RANGE,
-    .type = VON_NEUMANN,
-    .operation = SUM,
-  };
+    init(argc, argv, &input_file, &output_file, &log_file);
+    log_init(log_file);
 
-  if (argc != 3) {
-    printf("Usage: ./stencil <input> <output>\n");
-    exit(1);
-  }
+    Matrix matrix = read_file(input_file);
 
-  Matrix matrix = read_file(argv[1]);
-  //print_matrix(matrix);
-  
-  // Compute specified number of iterations
-  matrix = compute(matrix, stencil);
+    Stencil stencil = square_2d(2);
+    init_stencil(stencil, avg);
+    matrix = compute(matrix);
 
-  //print_matrix(matrix);
-  write_file(matrix, argv[2]);
+    //print_matrix(matrix);
+    write_file(matrix, output_file);
 
-  log_cleanup();
-  free(matrix.data);
-  return 0;
+    log_cleanup();
+    stencil_cleanup();
+    free(matrix.data);
+    return 0;
 }
-

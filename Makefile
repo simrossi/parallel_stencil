@@ -10,8 +10,8 @@ OBJS:= $(patsubst $(SRC_DIR)/%.c, $(BUILD_DIR)/%.o, $(SRCS))
 OBJDIRS:=$(dir $(OBJS))
 
 EXEC:=stencil
-INPUT:=input
-OUTPUT:=output
+INPUT_FILE:=input
+OUTPUT_FILE:=output
 
 all: $(BUILD_DIR) $(EXEC)
 
@@ -26,7 +26,7 @@ $(BUILD_DIR)/%.o: $(SRC_DIR)/%.c
 	$(CC) $(CFLAGS) -c $< -o $@
 
 run: all
-	./$(EXEC) $(INPUT) $(OUTPUT)
+	./$(EXEC) -i $(INPUT_FILE) -o $(OUTPUT_FILE)
 
 clean:
 	rm -rf $(BUILD_DIR) $(EXEC)

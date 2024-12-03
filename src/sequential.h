@@ -3,6 +3,6 @@
 
 #include "types.h"
 
-Matrix compute(const Matrix matrix, const Stencil stencil);
+Matrix compute(const Matrix matrix);
 
 #endif

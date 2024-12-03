@@ -4,27 +4,6 @@
 #include <stdint.h>
 #include "common.h"
 
-// Stencil types
-typedef enum {
-  MOORE,
-  VON_NEUMANN,
-} StencilType;
-
-// Operation types
-typedef enum {
-  AVG, // Average
-  WAVG, // Weighted average
-  SUM, // Sum
-  WSUM, // Weighted sum
-} OperationType;
-
-// Stencil structure
-typedef struct {
-  uint32_t size;
-  StencilType type;
-  OperationType operation;
-} Stencil;
-
 // Matrix structure
 typedef struct {
   uint32_t total_size;
@@ -34,10 +13,14 @@ typedef struct {
   float* data;
 } Matrix;
 
-// Neighbor structure
+// Stencil structure
 typedef struct {
-  float value;
-  float weight;
-} Neighbor;
+  uint32_t dimensions;
+  uint32_t sizes[MAX_DIMS];
+  uint32_t center[MAX_DIMS];
+  float* data;
+} Stencil;
+
+typedef float (*Operation)(const float*, const uint32_t);
 
 #endif

@@ -15,7 +15,7 @@ Matrix read_file(const char* filename) {
   FILE* file = fopen(filename, "r");
 
   if (!file) {
-    fprintf(stderr, "Error opening input file: %s\n", filename);
+    fprintf(stderr, "Error: Failed to open input file '%s'.\n", filename);
     exit(1);
   }
 
@@ -40,7 +40,7 @@ Matrix read_file(const char* filename) {
   matrix.total_size = total_size;
   matrix.data = malloc(total_size * sizeof(float));
   if (matrix.data == NULL) {
-    fprintf(stderr, "Error while allocating matrix data\n");
+    fprintf(stderr, "Error: Failed to allocate matrix data.\n");
     exit(1);
   }
 
@@ -48,7 +48,7 @@ Matrix read_file(const char* filename) {
   for (uint32_t i = 0; i < total_size; i++) {
     float value;
     if (fscanf(file, "%f", &value) == EOF) {
-      fprintf(stderr, "Unsufficient number of values provided\n");
+      fprintf(stderr, "Error: Unsufficient number of values provided.\n");
       exit(1);
     }
 
@@ -63,14 +63,14 @@ void write_file(const Matrix matrix, const char* filename) {
   FILE* file = fopen(filename, "w");
 
   if (!file) {
-    fprintf(stderr, "Error opening output file: %s\n", filename);
+    fprintf(stderr, "Error: Failed to open output file '%s'.\n", filename);
     exit(1);
   }
 
   // Write dimensions sizes
   for (uint32_t i = 0; i < matrix.dimensions; i++) {
     const char* delimiter = (i != matrix.dimensions - 1 ? " " : "\n");
-    fprintf(file, "%d%s", matrix.sizes[i], delimiter);
+    fprintf(file, "%u%s", matrix.sizes[i], delimiter);
   }
 
   // Write data

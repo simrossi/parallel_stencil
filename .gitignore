@@ -1,6 +1,6 @@
 stencil
+output
 build/
-log.txt
 
 # Ignore everything except python scripts
 scripts/*

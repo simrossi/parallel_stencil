@@ -1,9 +1,11 @@
 #ifndef STENCIL_H
 #define STENCIL_H
 
+#include <stdint.h>
 #include "types.h"
 
-uint32_t moore(const Matrix matrix, const uint32_t* indices, const uint32_t range, Neighbor* neighbors);
-uint32_t von_neumann(const Matrix matrix, const uint32_t* indices, const uint32_t range, Neighbor* neighbors);
+void init_stencil(const Stencil stencil, const Operation operation);
+void stencil_cleanup();
+float compute_stencil(const Matrix matrix, const uint32_t offset);
 
 #endif

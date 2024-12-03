@@ -27,35 +27,30 @@ make
 The program processes an input file containing a matrix and generates an output file with the resulting matrix. The file format consists of two rows: the first row specifies the dimensions, and the second row contains the continuous data.
 
 ```
-./stencil input output
+./stencil -i <input_file> -o <output_file> [-l <log_file>]
 ```
-To change the stencil modify the stencil variable in `src/main.c`.
+To change the stencil and the operation to perform modify the arguments provided to `init_stencil()` in `src/main.c`.
+A list of different stencils can be found in `src/patterns.h` while all different operations are contained in `src/operations.h`.
 
-### Executing program on image
+### Python scripts
 
-The best way to have a visual result is to run the code on an input image and see how it is modified based on the stencil used.
-Inside the folder `scripts`, an ad-hoc python script has been written for this purpose.
+The folder `scripts/` contains some python scripts that can be used to perform various operations.
+One of them is `image.py` which allows to apply the stencil computation to a provided image.
 
 ```
-./boxblur.py ../stencil <img_name> <output_dir>
+./image.py <stencil_binary> <image> <output_directory>
 ```
 
-The line above will run the stencil program on the input image generating as output, in the defined folder, another image to which the stencil has been applied.
+The command above will save the resulting image in the specified `output_directory`.
 
 ### Expand program
 
-The program can be expanded by adding new stencil operations and neighborhoods.
-To add a new stencil operation:
-* Add a new value to the `StencilOperation` enum in `src/types.h`.
-* Implement the operation in `src/operations/`.
-* Insert a new case to the `stencil.operation` switch case to address the new operation in `src/sequential.c` and `src/parallel.c`.
+The program can be expanded by adding new stencils and new operations:
+* To add a new stencil create a funcion declaration in `src/patterns.h` and its definition in `src/patterns.c`.
+* To add a new operation create a function declaration in `src/operations.h` and its definition in `src/operations.c`.
 
-To add a new stencil neighborhood type:
-* Add a new value to the `StencilType` enum in `src/types.h`.
-* Implement the function to retrieve the neighborhood in `src/stencil.c`.
-* Insert a new case to the `stencil.type` switch case to address the new type in `src/sequential.c` and `src/parallel.c`.
-
-Apply the new changes with `make`.
+You can guide yourself by looking at already existing stencils and operations.
+Don't forget to apply your new changes by running `make clean && make`.
 
 ## Authors
 

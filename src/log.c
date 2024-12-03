@@ -1,23 +1,25 @@
 #include <stdio.h>
-#include <stdint.h>
 #include <stdarg.h>
 #include <stdlib.h>
-#include "common.h"
 
-static FILE *log_file = NULL;
+static FILE* log_file = NULL;
 
-void log_init() {
-  log_file = fopen(LOG_FILE, "w");
+void log_init(const char* filename) {
+  if (filename == NULL) {
+    return;
+  }
+
+  log_file = fopen(filename, "w");
 
   if (log_file == NULL) {
-    fprintf(stderr, "Error opening specified log file!\n");
+    fprintf(stderr, "Error: Failed to open specified log file.\n");
     exit(1);
   }
 }
 
 void log_write(const char *format, ...) {
   if (log_file == NULL) {
-    log_init();
+    return;
   }
 
   va_list args;

@@ -9,7 +9,7 @@ red_file = green_file = blue_file = None
 
 def main():
     if len(sys.argv) != 4:
-        print("Usage: ./boxblur.py <stencil binary> <input image> <output directory>")
+        print("Usage: ./image.py <stencil binary> <input image> <output directory>")
 
     global binary, input_img, output_dir
     binary = sys.argv[1];
@@ -59,9 +59,9 @@ def imageToFiles():
 
 
 def computeStencil():
-    subprocess.run([binary, red_file, red_file])
-    subprocess.run([binary, green_file, green_file])
-    subprocess.run([binary, blue_file, blue_file])
+    subprocess.run([binary, '-i', red_file, '-o', red_file])
+    subprocess.run([binary, '-i', green_file, '-o',green_file])
+    subprocess.run([binary, '-i', blue_file, '-o',blue_file])
 
 
 def filesToImage():
