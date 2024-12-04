@@ -4,7 +4,7 @@
 #include <stdint.h>
 #include "types.h"
 
-//Stencil example();
+// Stencil example();
 Stencil square_2d(const uint32_t range);
 Stencil cross_2d(const uint32_t range);
 

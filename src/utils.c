@@ -1,5 +1,9 @@
+#include <getopt.h>
+#include <stdint.h>
+#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <unistd.h>
 #include "types.h"
 #include "utils.h"
 
@@ -107,7 +111,7 @@ void print_matrix_rec(const Matrix matrix, const uint32_t depth)
 
 Matrix stencil_to_matrix(const Stencil stencil)
 {
-    Matrix matrix = { .dimensions = stencil.dimensions, .total_size = 1 };
+    Matrix matrix = {.dimensions = stencil.dimensions, .total_size = 1};
 
     memcpy(matrix.sizes, stencil.sizes, stencil.dimensions * sizeof(uint32_t));
     for (int32_t i = stencil.dimensions - 1; i >= 0; i--)

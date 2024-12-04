@@ -15,7 +15,11 @@
     };
     memcpy(data, tmp, tot_size * sizeof(float));
 
-    return (Stencil){.dimensions = 2, .sizes = {3, 3}, .center = {1, 1}, .data = data};
+    return (Stencil){
+        .dimensions = 2,
+        .sizes = {3, 3},
+        .center = {1, 1},
+        .data = data};
 }*/
 
 Stencil square_2d(uint32_t range)
@@ -24,12 +28,16 @@ Stencil square_2d(uint32_t range)
     uint32_t tot_size = size * size;
     float *data = malloc(tot_size * sizeof(float));
 
-    for (uint32_t i = 0; i < tot_size; i++)
+    for (uint32_t i = 0; i < tot_size; i++) // Initialize elements to one
     {
         data[i] = 1.0f;
     }
 
-    return (Stencil){.dimensions = 2, .sizes = {size, size}, .center = {range, range}, .data = data};
+    return (Stencil){
+        .dimensions = 2,
+        .sizes = {size, size},
+        .center = {range, range},
+        .data = data};
 }
 
 Stencil cross_2d(uint32_t range)
@@ -38,20 +46,24 @@ Stencil cross_2d(uint32_t range)
     uint32_t tot_size = size * size;
     float *data = malloc(tot_size * sizeof(float));
 
-    for (uint32_t i = 0; i < tot_size; i++)
+    for (uint32_t i = 0; i < tot_size; i++) // Initialize elements to zero
     {
         data[i] = 0.0f;
     }
 
-    for (uint32_t i = 0; i < size; i++)
+    for (uint32_t i = 0; i < size; i++) // Set vertical middle column
     {
         data[size * i + range] = 1.0f;
     }
 
-    for (uint32_t i = 0; i < size; i++)
+    for (uint32_t i = 0; i < size; i++) // Set horizontal middle row
     {
         data[size * range + i] = 1.0f;
     }
 
-    return (Stencil){.dimensions = 2, .sizes = {size, size}, .center = {range, range}, .data = data};
+    return (Stencil){
+        .dimensions = 2,
+        .sizes = {size, size},
+        .center = {range, range},
+        .data = data};
 }

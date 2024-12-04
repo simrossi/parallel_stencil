@@ -39,8 +39,10 @@ uint32_t indices_to_offset(const Matrix matrix, const uint32_t *indices)
 }
 
 // Calculate the offsets between two points
-void calculate_offsets(const Matrix matrix, const uint32_t* center, const uint32_t* point, int32_t* offsets) {
-    for (uint32_t i = 0; i < matrix.dimensions; i++) {
+void calculate_offsets(const Matrix matrix, const uint32_t *center, const uint32_t *point, int32_t *offsets)
+{
+    for (uint32_t i = 0; i < matrix.dimensions; i++)
+    {
         offsets[i] = point[i] - center[i];
     }
 }

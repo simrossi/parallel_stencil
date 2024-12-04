@@ -3,9 +3,9 @@
 
 #include "types.h"
 
-void offset_to_indices(const Matrix matrix, uint32_t offset, uint32_t* indices);
-uint32_t indices_to_offset(const Matrix matrix, const uint32_t* indices);
-void calculate_offsets(const Matrix matrix, const uint32_t* center, const uint32_t* point, int32_t* offsets);
+void offset_to_indices(const Matrix matrix, uint32_t offset, uint32_t *indices);
+uint32_t indices_to_offset(const Matrix matrix, const uint32_t *indices);
+void calculate_offsets(const Matrix matrix, const uint32_t *center, const uint32_t *point, int32_t *offsets);
 float get(const Matrix matrix, ...);
 void set(const Matrix matrix, const float value, ...);
 

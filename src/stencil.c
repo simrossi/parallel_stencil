@@ -1,6 +1,7 @@
 #include <stdint.h>
 #include <stdio.h>
 #include <string.h>
+#include <stdlib.h>
 #include "common.h"
 #include "matrix.h"
 #include "stencil.h"
@@ -18,7 +19,8 @@ void init_stencil(const Stencil _stencil, const Operation _operation)
     stencil_matrix = stencil_to_matrix(stencil);
 }
 
-void stencil_cleanup() {
+void stencil_cleanup()
+{
     free(stencil.data);
     free(stencil_matrix.data);
 }
@@ -63,7 +65,8 @@ float compute_stencil(const Matrix matrix, const uint32_t offset)
 
         // Map the current element to the stencil pattern
         calculate_offsets(matrix, indices, curr, offsets);
-        for (uint32_t i = 0; i < matrix.dimensions; i++) {
+        for (uint32_t i = 0; i < matrix.dimensions; i++)
+        {
             stencil_indices[i] = stencil.center[i] + offsets[i];
         }
 
@@ -71,7 +74,8 @@ float compute_stencil(const Matrix matrix, const uint32_t offset)
         float stencil_value = stencil.data[indices_to_offset(stencil_matrix, stencil_indices)];
 
         // Consider only stencil values different than zero
-        if (stencil_value != 0) {
+        if (stencil_value != 0)
+        {
             // Store the neighbors and scale them by the stencil value
             neighbors[actual_size++] = matrix.data[indices_to_offset(matrix, curr)] * stencil_value;
         }

@@ -5,7 +5,7 @@
 
 #include "types.h"
 
-Matrix read_file(const char* filename);
-void write_file(const Matrix matrix, const char* filename);
+Matrix read_file(const char *filename);
+void write_file(const Matrix matrix, const char *filename);
 
 #endif

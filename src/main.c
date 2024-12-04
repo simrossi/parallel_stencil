@@ -1,5 +1,5 @@
 #include <stdint.h>
-#include <stdio.h>
+#include <stdlib.h>
 #include "log.h"
 #include "operations.h"
 #include "parser.h"
@@ -15,21 +15,22 @@
 #include "sequential.h"
 #endif
 
-int32_t main(int32_t argc, char** argv) {
-    char* input_file = NULL;
-    char* output_file = NULL;
-    char* log_file = NULL;
+int32_t main(int32_t argc, char **argv)
+{
+    char *input_file = NULL;
+    char *output_file = NULL;
+    char *log_file = NULL;
 
     init(argc, argv, &input_file, &output_file, &log_file);
     log_init(log_file);
 
     Matrix matrix = read_file(input_file);
-
     Stencil stencil = square_2d(2);
+
     init_stencil(stencil, avg);
     matrix = compute(matrix);
 
-    //print_matrix(matrix);
+    // print_matrix(matrix);
     write_file(matrix, output_file);
 
     log_cleanup();

@@ -8,18 +8,21 @@
 #include "timer.h"
 #include "types.h"
 
-Matrix compute(const Matrix matrix) {
+Matrix compute(const Matrix matrix)
+{
     Matrix tmp = matrix;
 
     // Allocate temporary matrix data buffer
     tmp.data = malloc(matrix.total_size * sizeof(float));
 
     double exec_time = 0;
-    for (uint32_t i = 0; i < ITERATIONS; i++) {
+    for (uint32_t i = 0; i < ITERATIONS; i++)
+    {
         clock_t timer = init_timer();
 
         // For every element calculate the new value
-        for (uint32_t i = 0; i < matrix.total_size; i++) {
+        for (uint32_t i = 0; i < matrix.total_size; i++)
+        {
             tmp.data[i] = compute_stencil(matrix, i);
         }
 
