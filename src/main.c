@@ -25,9 +25,9 @@ int32_t main(int32_t argc, char **argv)
     log_init(log_file);
 
     Matrix matrix = read_file(input_file);
-    Stencil stencil = square_2d(2);
+    Stencil stencil = vertical_edges_3x3();
 
-    init_stencil(stencil, avg);
+    init_stencil(stencil, sum);
     matrix = compute(matrix);
 
     // print_matrix(matrix);

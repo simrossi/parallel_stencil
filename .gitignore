@@ -1,5 +1,4 @@
 stencil
-output
 build/
 
 # Ignore everything except python scripts

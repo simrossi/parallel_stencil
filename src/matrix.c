@@ -1,4 +1,5 @@
 #include <stdarg.h>
+#include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include "common.h"
@@ -36,6 +37,36 @@ uint32_t indices_to_offset(const Matrix matrix, const uint32_t *indices)
     }
 
     return offset;
+}
+
+// Check whether the provided indices are out of bounds
+bool is_outside(const Matrix matrix, const int32_t *indices) {
+    for (uint32_t i = 0; i < matrix.dimensions; i++)
+    {
+        const int32_t index = indices[i];
+
+        if (index < 0 || index >= (int32_t)matrix.sizes[i])
+        {
+            return true;
+        }
+    }
+
+    return false;
+}
+
+// Calculate closest indices belonging to the matrix
+void closest_point(const Matrix matrix, const int32_t *indices, uint32_t *closest_indices) {
+    for (uint32_t i = 0; i < matrix.dimensions; i++) {
+        int32_t index = indices[i]; 
+
+        if (index < 0) {
+            closest_indices[i] = 0;
+        } else if (index >= (int32_t)matrix.sizes[i]) {
+            closest_indices[i] = matrix.sizes[i] - 1;
+        } else {
+            closest_indices[i] = index;
+        }
+    }
 }
 
 // Calculate the offsets between two points

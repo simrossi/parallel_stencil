@@ -34,7 +34,7 @@ float compute_stencil(const Matrix matrix, const uint32_t offset)
     }
 
     uint32_t region_size = 1, actual_size = 0;
-    uint32_t starts[MAX_DIMS], ends[MAX_DIMS], lengths[MAX_DIMS], curr[MAX_DIMS];
+    int32_t starts[MAX_DIMS], ends[MAX_DIMS], lengths[MAX_DIMS], curr[MAX_DIMS];
 
     // Compute indices of current element
     uint32_t indices[MAX_DIMS];
@@ -47,8 +47,8 @@ float compute_stencil(const Matrix matrix, const uint32_t offset)
         uint32_t space_before = stencil.center[i];
         uint32_t space_after = stencil.sizes[i] - (stencil.center[i] + 1);
 
-        starts[i] = (index > space_before ? index - space_before : 0);
-        ends[i] = (index + space_after < matrix.sizes[i] ? index + space_after : matrix.sizes[i] - 1);
+        starts[i] = index - space_before;//(index > space_before ? index - space_before : 0);
+        ends[i] = index + space_after;//(index + space_after < matrix.sizes[i] ? index + space_after : matrix.sizes[i] - 1);
         lengths[i] = (ends[i] - starts[i]) + 1;
         region_size *= lengths[i];
     }
@@ -64,10 +64,10 @@ float compute_stencil(const Matrix matrix, const uint32_t offset)
         uint32_t stencil_indices[MAX_DIMS];
 
         // Map the current element to the stencil pattern
-        calculate_offsets(matrix, indices, curr, offsets);
-        for (uint32_t i = 0; i < matrix.dimensions; i++)
+        calculate_offsets(matrix, indices, (uint32_t*)curr, offsets);
+        for (uint32_t j = 0; j < matrix.dimensions; j++)
         {
-            stencil_indices[i] = stencil.center[i] + offsets[i];
+            stencil_indices[j] = stencil.center[j] + offsets[j];
         }
 
         // Retrieve the stencil value corresponding to the current element
@@ -76,8 +76,18 @@ float compute_stencil(const Matrix matrix, const uint32_t offset)
         // Consider only stencil values different than zero
         if (stencil_value != 0)
         {
-            // Store the neighbors and scale them by the stencil value
-            neighbors[actual_size++] = matrix.data[indices_to_offset(matrix, curr)] * stencil_value;
+            bool outside = is_outside(matrix, curr);
+
+            if (outside) {
+                uint32_t closest_indices[MAX_DIMS];
+                closest_point(matrix, curr, closest_indices);
+
+                // Set the value to zero if the element affects the stencil while also being outside of the matrix
+                neighbors[actual_size++] = matrix.data[indices_to_offset(matrix, closest_indices)] * stencil_value;
+            } else {
+                // Store the neighbors and scale them by the stencil value
+                neighbors[actual_size++] = matrix.data[indices_to_offset(matrix, (uint32_t*)curr)] * stencil_value;
+            }
         }
 
         // Update current position

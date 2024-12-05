@@ -67,3 +67,21 @@ Stencil cross_2d(uint32_t range)
         .center = {range, range},
         .data = data};
 }
+
+Stencil vertical_edges_3x3() {
+    const uint32_t tot_size = 3 * 3;
+    float *data = malloc(tot_size * sizeof(float));
+
+    float tmp[9] = {
+        -1.0f, 0.0f, 1.0f,
+        -2.0f, 0.0f, 2.0f,
+        -1.0f, 0.0f, 1.0f
+    };
+    memcpy(data, tmp, tot_size * sizeof(float));
+
+    return (Stencil){
+        .dimensions = 2,
+        .sizes = {3, 3},
+        .center = {1, 1},
+        .data = data};
+}
