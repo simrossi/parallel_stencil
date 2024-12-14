@@ -2,18 +2,15 @@
 #include <stdlib.h>
 #include "log.h"
 #include "operations.h"
+#include "parallel.h"
 #include "parser.h"
 #include "patterns.h"
+#include "sequential.h"
 #include "stencil.h"
 #include "types.h"
 #include "utils.h"
 
-// #define PARALLEL // Perform parallel stencil computation
-#ifdef PARALLEL
-#include "parallel.h"
-#else
-#include "sequential.h"
-#endif
+#define PARALLEL // Perform parallel stencil computation
 
 int32_t main(int32_t argc, char **argv)
 {
@@ -28,7 +25,12 @@ int32_t main(int32_t argc, char **argv)
     Stencil stencil = vertical_edges_3x3();
 
     init_stencil(stencil, sum);
-    matrix = compute(matrix);
+
+#ifndef PARALLEL
+    matrix = compute_sequential(matrix);
+#else
+    matrix = compute_parallel(matrix);
+#endif
 
     // print_matrix(matrix);
     write_file(matrix, output_file);

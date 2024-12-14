@@ -3,6 +3,6 @@
 
 #include "types.h"
 
-Matrix compute(const Matrix matrix);
+Matrix compute_sequential(const Matrix matrix);
 
 #endif

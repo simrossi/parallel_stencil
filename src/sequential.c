@@ -8,7 +8,7 @@
 #include "timer.h"
 #include "types.h"
 
-Matrix compute(const Matrix matrix)
+Matrix compute_sequential(const Matrix matrix)
 {
     Matrix tmp = matrix;
 
@@ -37,3 +37,4 @@ Matrix compute(const Matrix matrix)
     free(matrix.data);
     return tmp;
 }
+
