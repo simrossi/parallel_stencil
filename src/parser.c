@@ -5,6 +5,8 @@
 #include "parser.h"
 #include "types.h"
 
+#define BUFFER_SIZE 65536
+
 Matrix read_file(const char *filename);
 void write_file(const Matrix matrix, const char *filename);
 
@@ -77,6 +79,18 @@ void write_file(const Matrix matrix, const char *filename)
         exit(1);
     }
 
+    // Create a buffer for buffered writing
+    char *buffer = malloc(BUFFER_SIZE);
+    if (!buffer)
+    {
+        fprintf(stderr, "Error: Failed to allocate write buffer.\n");
+        fclose(file);
+        exit(1);
+    }
+
+    // Set up file stream with custom buffer
+    setvbuf(file, buffer, _IOFBF, BUFFER_SIZE);
+
     // Write dimensions sizes
     for (uint32_t i = 0; i < matrix.dimensions; i++)
     {
@@ -92,4 +106,5 @@ void write_file(const Matrix matrix, const char *filename)
     }
 
     fclose(file);
+    free(buffer);
 }
