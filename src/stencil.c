@@ -59,6 +59,9 @@ float compute_stencil(const Matrix matrix, const uint32_t offset)
 
     // For every element of the region store its value and calculate its weight
     float neighbors[region_size];
+    //#pragma omp parallel for num_threads(4) schedule(dynamic) private(curr, stencil_matrix) shared(neighbors)
+    //this part of code is fast enough even withou paralellization, adding an omp pragma just adds
+    //useless overhead which makes the execution slower
     for (uint32_t i = 0; i < region_size; i++)
     {
         int32_t offsets[MAX_DIMS];
@@ -66,6 +69,7 @@ float compute_stencil(const Matrix matrix, const uint32_t offset)
 
         // Map the current element to the stencil pattern
         calculate_offsets(matrix, indices, (uint32_t*)curr, offsets);
+
         for (uint32_t j = 0; j < matrix.dimensions; j++)
         {
             stencil_indices[j] = stencil.center[j] + offsets[j];
@@ -84,11 +88,13 @@ float compute_stencil(const Matrix matrix, const uint32_t offset)
                 closest_point(matrix, curr, closest_indices);
 
                 // Set the value to zero if the element affects the stencil while also being outside of the matrix
-                neighbors[actual_size++] = matrix.data[indices_to_offset(matrix, closest_indices)] * stencil_value;
+                neighbors[actual_size] = matrix.data[indices_to_offset(matrix, closest_indices)] * stencil_value;
             } else {
                 // Store the neighbors and scale them by the stencil value
-                neighbors[actual_size++] = matrix.data[indices_to_offset(matrix, (uint32_t*)curr)] * stencil_value;
+                neighbors[actual_size] = matrix.data[indices_to_offset(matrix, (uint32_t*)curr)] * stencil_value;
             }
+
+            actual_size++;
         }
 
         // Update current position
