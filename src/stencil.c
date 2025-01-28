@@ -25,6 +25,7 @@ void stencil_cleanup()
     free(stencil_matrix.data);
 }
 
+//TODO: insert opnempi calls (threads) in order to augment parallelization efficiency
 float compute_stencil(const Matrix matrix, const uint32_t offset)
 {
     if (matrix.dimensions != stencil.dimensions)

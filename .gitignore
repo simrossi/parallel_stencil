@@ -1,5 +1,6 @@
 stencil
 build/
+venv/
 
 # Ignore everything except python scripts
 scripts/*
