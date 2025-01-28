@@ -12,8 +12,6 @@
 
 #define PARALLEL // Perform parallel stencil computation
 
-//TODO: calcolo dell'efficiency e del speed up (fare dei grafici) vedi slide 13 del corso
-
 int32_t main(int32_t argc, char **argv)
 {
     char *input_file = NULL;

@@ -63,7 +63,7 @@ Matrix compute_parallel(const Matrix matrix)
         double start_time = MPI_Wtime();
 
         // For every element calculate the new value
-        #pragma omp parallel for num_threads(4) schedule(guided)
+        //#pragma omp parallel for num_threads(2) schedule(guided)
         for (uint32_t i = start; i < end; i++)
         {
             local_data[i - start] = compute_stencil(matrix, i);

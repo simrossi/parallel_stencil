@@ -75,8 +75,11 @@ def plot_data(all_iterations_list, all_times_list, file_names):
     ax2.grid(True)
     ax2.legend()
 
-    #just show the plot, no saving
     plt.tight_layout()
+
+    output_filename = "time_plot.png"
+    plt.savefig(output_filename, dpi=300, bbox_inches='tight')
+
     plt.show()
 
 def main():
