@@ -1,4 +1,5 @@
 #include <getopt.h>
+#include <stdbool.h>
 #include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -7,49 +8,69 @@
 #include "types.h"
 #include "utils.h"
 
+extern uint32_t num_threads;
+
 void print_matrix_rec(const Matrix matrix, const uint32_t depth);
 
 // Initialize program and parse provided arguments
-void init(const int32_t argc, char **argv, char **input_file, char **output_file, char **log_file)
+void init(const int32_t argc, char **argv, char **input_file, char **output_file, char **log_file, bool *binary)
 {
     *input_file = NULL;
     *output_file = NULL;
     *log_file = NULL;
+    *binary = false;
 
     // Define the long options
     struct option long_options[] = {
-        {"input-file", required_argument, NULL, 'i'},
-        {"output-file", required_argument, NULL, 'o'},
-        {"log-file", required_argument, NULL, 'l'},
-        {"help", no_argument, NULL, 'h'},
+        {"input-file", required_argument, 0, 'i'},
+        {"output-file", required_argument, 0, 'o'},
+        {"log-file", required_argument, 0, 'l'},
+        {"threads", required_argument, 0, 't'},
+        {"binary", no_argument, 0, 'b'},
+        {"help", no_argument, 0, 'h'},
         {0, 0, 0, 0} // End of options
     };
 
-    int32_t opt;
-    while ((opt = getopt_long(argc, argv, "i:o:l:h", long_options, NULL)) != -1)
+    while (true)
     {
+        int32_t option_index = 0;
+        int32_t opt = getopt_long(argc, argv, "i:o:l:t:bh", long_options, &option_index);
+
+        if (opt == -1) {
+            break;
+        }
+
         switch (opt)
         {
-        case 'i':
-            *input_file = optarg;
-            break;
-        case 'o':
-            *output_file = optarg;
-            break;
-        case 'l':
-            *log_file = optarg;
-            break;
-        case 'h':
-            // Print help message
-            printf("Usage: program -i <input_file> -o <output_file> [-l <log_file>]\n");
-            printf("Options:\n");
-            printf("  -i, --input-file <file>   Specify the input file\n");
-            printf("  -o, --output-file <file>  Specify the output file\n");
-            printf("  -l, --log-file <file>     Specify the log file\n");
-            printf("  -h, --help                Print this help message\n");
-            exit(0);
-        default:
-            exit(1);
+            case 'i':
+                *input_file = optarg;
+                break;
+            case 'o':
+                *output_file = optarg;
+                break;
+            case 'l':
+                *log_file = optarg;
+                break;
+            case 't':
+                num_threads = atoi(optarg);
+                break;
+            case 'b':
+                *binary = true;
+                break;
+            case 'h':
+            case '?':
+                // Print help message
+                printf("Usage: program -i <input_file> -o <output_file> [-l <log_file>] [-t <num_threads>] [-b]\n");
+                printf("Options:\n");
+                printf("  -i, --input-file <file>   Specify the input file\n");
+                printf("  -o, --output-file <file>  Specify the output file\n");
+                printf("  -l, --log-file <file>     Specify the log file\n");
+                printf("  -t, --threads <value>     Specify the number of threads\n");
+                printf("  -b, --binary              Use binary format\n");
+                printf("  -h, --help                Print this help message\n");
+                exit(0);
+            default:
+                exit(1);
         }
     }
 
@@ -72,6 +93,15 @@ void init(const int32_t argc, char **argv, char **input_file, char **output_file
     {
         fprintf(stderr, "Error: An output file must be specified. Use -o or --output-file.\n");
         exit(1);
+    }
+
+    // Check whether extra arguments were provided
+    if (optind < argc) {
+        fprintf(stdout, "Warning: Extra arguments were provided:");
+        while (optind < argc) {
+            fprintf(stdout, " %s", argv[optind++]);
+        }
+        fprintf(stdout, "\n");
     }
 }
 

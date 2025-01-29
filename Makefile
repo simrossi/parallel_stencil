@@ -3,6 +3,7 @@ CFLAGS:=-Wall -Wextra -fopenmp
 LDFLAGS:=-lm
 SHELL:=/bin/bash
 PROCS:=4
+THREADS:=2
 
 SRC_DIR:=src
 BUILD_DIR:=build
@@ -28,7 +29,8 @@ $(BUILD_DIR)/%.o: $(SRC_DIR)/%.c
 	$(CC) $(CFLAGS) -c $< -o $@
 
 run: all
-	mpiexec -n $(PROCS) ./$(EXEC) -i $(INPUT_FILE) -o $(OUTPUT_FILE)
+	module load mpi/openmpi-x86_64; \
+	mpiexec -n $(PROCS) ./$(EXEC) -i $(INPUT_FILE) -o $(OUTPUT_FILE) -t $(THREADS)
 
 clean:
 	rm -rf $(BUILD_DIR) $(EXEC)

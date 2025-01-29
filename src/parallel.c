@@ -1,4 +1,5 @@
 #include <mpi.h>
+#include <omp.h>
 #include <stdint.h>
 #include <stdlib.h>
 #include <string.h>
@@ -7,6 +8,8 @@
 #include "sequential.h"
 #include "stencil.h"
 #include "types.h"
+
+extern uint32_t num_threads;
 
 Matrix compute_parallel(const Matrix matrix)
 {
@@ -63,6 +66,7 @@ Matrix compute_parallel(const Matrix matrix)
         double start_time = MPI_Wtime();
 
         // For every element calculate the new value
+        #pragma omp parallel for num_threads(num_threads) schedule(guided)
         for (uint32_t i = start; i < end; i++)
         {
             local_data[i - start] = compute_stencil(matrix, i);

@@ -5,11 +5,6 @@
 #include "parser.h"
 #include "types.h"
 
-#define BUFFER_SIZE 65536
-
-Matrix read_file(const char *filename);
-void write_file(const Matrix matrix, const char *filename);
-
 Matrix read_file(const char *filename)
 {
     Matrix matrix;
@@ -79,18 +74,6 @@ void write_file(const Matrix matrix, const char *filename)
         exit(1);
     }
 
-    // Create a buffer for buffered writing
-    char *buffer = malloc(BUFFER_SIZE);
-    if (!buffer)
-    {
-        fprintf(stderr, "Error: Failed to allocate write buffer.\n");
-        fclose(file);
-        exit(1);
-    }
-
-    // Set up file stream with custom buffer
-    setvbuf(file, buffer, _IOFBF, BUFFER_SIZE);
-
     // Write dimensions sizes
     for (uint32_t i = 0; i < matrix.dimensions; i++)
     {
@@ -102,9 +85,75 @@ void write_file(const Matrix matrix, const char *filename)
     for (uint32_t i = 0; i < matrix.total_size; i++)
     {
         const char *delimiter = (i != matrix.total_size - 1 ? " " : "\n");
-        fprintf(file, "%f%s", matrix.data[i], delimiter);
+        fprintf(file, "%g%s", matrix.data[i], delimiter);
     }
 
     fclose(file);
-    free(buffer);
+}
+
+Matrix read_binfile(const char *filename)
+{
+    Matrix matrix;
+    FILE *file = fopen(filename, "rb");
+
+    if (!file)
+    {
+        fprintf(stderr, "Error: Failed to open input file '%s'.\n", filename);
+        exit(1);
+    }
+
+    // Read number of dimensions
+    fread(&matrix.dimensions, sizeof(uint32_t), 1, file);
+
+    // Read and store dimensions sizes
+    fread(matrix.sizes, sizeof(uint32_t), matrix.dimensions, file);
+
+    // Compute total number of elements and submatrices sizes
+    uint32_t total_size = 1;
+    for (int32_t i = matrix.dimensions - 1; i >= 0; i--)
+    {
+        matrix.submat_sizes[i] = total_size;
+        total_size *= matrix.sizes[i];
+    }
+
+    // Allocate contiguous data buffer
+    matrix.total_size = total_size;
+    matrix.data = malloc(total_size * sizeof(float));
+    if (matrix.data == NULL)
+    {
+        fprintf(stderr, "Error: Failed to allocate matrix data.\n");
+        exit(1);
+    }
+
+    // Read and store data
+    uint32_t bytes_read = fread(matrix.data, sizeof(float), total_size, file);
+    if (bytes_read < total_size){
+        fprintf(stderr, "Error: Unsufficient number of values provided.\n");
+        exit(1);
+    }
+
+    fclose(file);
+    return matrix;
+}
+
+void write_binfile(const Matrix matrix, const char *filename)
+{
+    FILE *file = fopen(filename, "wb");
+
+    if (!file)
+    {
+        fprintf(stderr, "Error: Failed to open output file '%s'.\n", filename);
+        exit(1);
+    }
+
+    // Write number of dimensions
+    fwrite(&matrix.dimensions, sizeof(uint32_t), 1, file);
+
+    // Write dimensions sizes
+    fwrite(matrix.sizes, sizeof(uint32_t), matrix.dimensions, file);
+
+    // Write data
+    fwrite(matrix.data, sizeof(float), matrix.total_size, file);
+
+    fclose(file);
 }
