@@ -29,7 +29,7 @@ def plot_speedup_and_efficiency(speedups, efficiencies=None):
     
     plt.figure(figsize=(10, 6))
     
-    # Speedup chart
+    #speedup chart
     if efficiencies:
         plt.subplot(2, 1, 1)
 
@@ -41,8 +41,8 @@ def plot_speedup_and_efficiency(speedups, efficiencies=None):
     plt.legend()
 
     if efficiencies:
+        #efficiency chart
         efficiency_values = [efficiencies[np] for np in num_processes]
-        # Efficiency chart
         plt.subplot(2, 1, 2)
         plt.plot(num_processes, efficiency_values, marker='o', linestyle='-', color='green', label='Efficiency')
         plt.xlabel("Number of processes")
@@ -60,13 +60,15 @@ def plot_speedup_and_efficiency(speedups, efficiencies=None):
 
 def main():
     if len(sys.argv) < 2:
-        print("Utilizzo: python script.py log_sequential log_parallel_np2 log_parallel_npX ... [-e]")
-        sys.exit(1)
+        #required at least the sequential log
+        print("Usage: python3 script.py log_sequential log_parallel_nX log_parallel_nY ... [-e]")
+        sys.exit(0)
 
+    #in some cases (when using hybrid implementations) it is not possible to use the efficiency
+    #formula as it is, by explicitly add -e, the user asks for the efficiency plot
     filenames = sys.argv[1:]
-    plot_efficiency = "-e" in filenames  # Controlla se è presente l'argomento -e
+    plot_efficiency = "-e" in filenames 
 
-    # Rimuove l'argomento -e dalla lista dei file se presente
     if plot_efficiency:
         filenames.remove("-e")
 
