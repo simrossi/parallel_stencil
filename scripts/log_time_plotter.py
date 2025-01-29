@@ -45,7 +45,7 @@ generate 2 plots to make a comparison between al n executions
 '''
 def plot_data(all_iterations_list, all_times_list, file_names):
     #subplot for 2 plots
-    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(15, 6))
+    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(17, 8))
     
     #a set of colors to be used for each line which corresponds to a specific execution mode
     colors = ['b', 'g', 'r', 'c', 'm', 'y', 'k']
@@ -60,7 +60,6 @@ def plot_data(all_iterations_list, all_times_list, file_names):
     ax1.set_xlabel("Iteration")
     ax1.set_ylabel("Cumulative time (seconds)")
     ax1.grid(True)
-    ax1.legend()
     
     #individual time plot
     for i, (all_iterations, all_times, file_name) in enumerate(zip(all_iterations_list, all_times_list, file_names)):
@@ -73,7 +72,10 @@ def plot_data(all_iterations_list, all_times_list, file_names):
     ax2.set_xlabel("Iteration")
     ax2.set_ylabel("Individual time (seconds)")
     ax2.grid(True)
-    ax2.legend()
+    
+    # Position the legend outside the plot area
+    ax1.legend(loc='lower center', bbox_to_anchor=(0.5,-0.2), ncol=3)
+    ax2.legend(loc='lower center', bbox_to_anchor=(0.5,-0.2), ncol=3)
 
     plt.tight_layout()
 
@@ -86,6 +88,7 @@ def main():
     if len(sys.argv) < 2:
         #require at least 1 log as input
         print("Usage: ./log_plotter.py <log file1> <log file2> ...")
+        print("They must terminate in _sequential or _nX where X is the number of processes used")
         exit(0)
 
     all_iterations_list = []

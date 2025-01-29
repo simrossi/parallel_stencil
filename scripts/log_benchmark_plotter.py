@@ -3,10 +3,6 @@ import re
 import sys
 import matplotlib.pyplot as plt
 
-'''
-simply extract from each log file the last line that contains the total execution time
-wihch will be then used for computing the speedup and efficiency metrics
-'''
 def extract_time(filename):
     with open(filename, 'r') as file:
         for line in file:
@@ -17,12 +13,8 @@ def extract_time(filename):
                     raise ValueError(f"Malformed line in {filename}: {line.strip()}")
     raise ValueError(f"Total time not found in log {filename}.")
 
-'''
-considering the format name of the log, extract the number of processes
-used for that particular execution
-'''
 def extract_num_processes(filename):
-    match = re.search(r'np(\d+)', filename)
+    match = re.search(r'n(\d+)', filename)
     return int(match.group(1)) if match else None
 
 def calculate_speedup(serial_time, parallel_times):
@@ -31,16 +23,16 @@ def calculate_speedup(serial_time, parallel_times):
 def calculate_efficiency(speedups):
     return {np: sp / np for np, sp in speedups.items()}
 
-
-def plot_speedup_and_efficiency(speedups, efficiencies):
+def plot_speedup_and_efficiency(speedups, efficiencies=None):
     num_processes = sorted(speedups.keys())
     speedup_values = [speedups[np] for np in num_processes]
-    efficiency_values = [efficiencies[np] for np in num_processes]
-
+    
     plt.figure(figsize=(10, 6))
     
-    #speedup chart
-    plt.subplot(2, 1, 1)
+    # Speedup chart
+    if efficiencies:
+        plt.subplot(2, 1, 1)
+
     plt.plot(num_processes, speedup_values, marker='o', linestyle='-', color='blue', label='Speedup')
     plt.xlabel("Number of processes")
     plt.ylabel("Speedup")
@@ -48,14 +40,16 @@ def plot_speedup_and_efficiency(speedups, efficiencies):
     plt.grid(axis="both", linestyle="--", alpha=0.7)
     plt.legend()
 
-    #efficiency chart
-    plt.subplot(2, 1, 2)
-    plt.plot(num_processes, efficiency_values, marker='o', linestyle='-', color='green', label='Efficiency')
-    plt.xlabel("Number of processes")
-    plt.ylabel("Efficiency")
-    plt.title("Efficiency wrt number of processes")
-    plt.grid(axis="both", linestyle="--", alpha=0.7)
-    plt.legend()
+    if efficiencies:
+        efficiency_values = [efficiencies[np] for np in num_processes]
+        # Efficiency chart
+        plt.subplot(2, 1, 2)
+        plt.plot(num_processes, efficiency_values, marker='o', linestyle='-', color='green', label='Efficiency')
+        plt.xlabel("Number of processes")
+        plt.ylabel("Efficiency")
+        plt.title("Efficiency wrt number of processes")
+        plt.grid(axis="both", linestyle="--", alpha=0.7)
+        plt.legend()
 
     plt.tight_layout()
 
@@ -66,11 +60,15 @@ def plot_speedup_and_efficiency(speedups, efficiencies):
 
 def main():
     if len(sys.argv) < 2:
-        #give in input at least 2 files
-        print("Utilizzo: python script.py log_sequential log_parallel_np2 log_parallel_npX ...")
+        print("Utilizzo: python script.py log_sequential log_parallel_np2 log_parallel_npX ... [-e]")
         sys.exit(1)
 
     filenames = sys.argv[1:]
+    plot_efficiency = "-e" in filenames  # Controlla se è presente l'argomento -e
+
+    # Rimuove l'argomento -e dalla lista dei file se presente
+    if plot_efficiency:
+        filenames.remove("-e")
 
     serial_time = None
     parallel_times = {}
@@ -90,7 +88,10 @@ def main():
     speedups = calculate_speedup(serial_time, parallel_times)
     efficiencies = calculate_efficiency(speedups)
 
-    plot_speedup_and_efficiency(speedups, efficiencies)
+    if plot_efficiency:
+        plot_speedup_and_efficiency(speedups, efficiencies)
+    else:
+        plot_speedup_and_efficiency(speedups)
 
 if __name__ == "__main__":
     main()
