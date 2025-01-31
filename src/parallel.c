@@ -67,9 +67,9 @@ Matrix compute_parallel(const Matrix matrix)
 
         // For every element calculate the new value
         #pragma omp parallel for num_threads(num_threads) schedule(guided)
-        for (uint32_t i = start; i < end; i++)
+        for (uint32_t j = start; j < end; j++)
         {
-            local_data[i - start] = compute_stencil(matrix, i);
+            local_data[j - start] = compute_stencil(matrix, j);
         }
 
         // Gather computed array data to the root process

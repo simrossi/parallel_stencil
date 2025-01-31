@@ -24,9 +24,9 @@ Matrix compute_sequential(const Matrix matrix)
 
         // For every element calculate the new value
         #pragma omp parallel for num_threads(num_threads) schedule(guided)
-        for (uint32_t i = 0; i < matrix.total_size; i++)
+        for (uint32_t j = 0; j < matrix.total_size; j++)
         {
-            tmp.data[i] = compute_stencil(matrix, i);
+            tmp.data[j] = compute_stencil(matrix, j);
         }
 
         double time = get_time(timer);
