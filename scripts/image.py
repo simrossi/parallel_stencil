@@ -17,17 +17,18 @@ have same proportions. When proportions are not uniform, the filter's operation 
 or noise because the dimension of the stencil doesn't correspond to the spacial structure of the image.
 '''
 def main():
-    if len(sys.argv) < 4:
-        print("Usage: ./image.py <stencil binary> <input image> <output directory> [output log]")
+    if len(sys.argv) < 5:
+        print("Usage: ./image.py <np mpi> <stencil binary> <input image> <output directory> [output log]")
         exit(0)
 
-    global binary, input_img, output_dir, log
-    binary = sys.argv[1]
-    input_img = sys.argv[2]
-    output_dir = sys.argv[3]
+    global np, binary, input_img, output_dir, log
+    np = sys.argv[1]
+    binary = sys.argv[2]
+    input_img = sys.argv[3]
+    output_dir = sys.argv[4]
 
-    if len(sys.argv) == 5:
-        log = sys.argv[4]
+    if len(sys.argv) == 6:
+        log = sys.argv[5]
 
     imageToFiles()
     computeStencil()
@@ -83,27 +84,26 @@ if indicated, a log file will be populated
 '''
 def computeStencil():
     #execution of red file
-    params = [binary, '-i', red_file, '-o', red_file]
-
+    params = ["mpiexec", "-np", np, binary, '-i', red_file, '-o', red_file]
     #in the case a log file is defined, just append the new param
     #to the params list
-    if len(sys.argv) == 5:
+    if len(sys.argv) == 6:
         params.extend(['-l', log+"_r"])
 
     subprocess.run(params)
     
     #execution of green file
-    params = [binary, '-i', green_file, '-o', green_file]
-
-    if len(sys.argv) == 5:
+    params = ["mpiexec", "-np", np, binary, '-i', green_file, '-o', green_file]
+    
+    if len(sys.argv) == 6:
         params.extend(['-l', log+"_g"])
 
     subprocess.run(params)
 
     #execution of blue file
-    params = [binary, '-i', blue_file, '-o',blue_file]
-
-    if len(sys.argv) == 5:
+    params = ["mpiexec", "-np", np, binary, '-i', blue_file, '-o', blue_file]
+    
+    if len(sys.argv) == 6:
         params.extend(['-l', log+"_b"])
 
     subprocess.run(params)

@@ -59,9 +59,9 @@ def process_frame_with_stencil(input_img, output_img, stencil_binary):
     save_channel(green_file, g_channel, width, height)
     save_channel(blue_file, b_channel, width, height)
 
-    subprocess.run([stencil_binary, "-i", red_file, "-o", red_file])
-    subprocess.run([stencil_binary, "-i", green_file, "-o", green_file])
-    subprocess.run([stencil_binary, "-i", blue_file, "-o", blue_file])
+    subprocess.run(["mpiexec", "-np", np, stencil_binary, "-i", red_file, "-o", red_file])
+    subprocess.run(["mpiexec", "-np", np, stencil_binary, "-i", green_file, "-o", green_file])
+    subprocess.run(["mpiexec", "-np", np, stencil_binary, "-i", blue_file, "-o", blue_file])
 
     #reconstruct the image after applying the stencil
     new_image = reconstruct_image(red_file, green_file, blue_file, width, height)
@@ -121,15 +121,17 @@ When proportions are not uniform, the filter's operation could produce artifacts
 or noise because the dimension of the stencil doesn't correspond to the spacial structure of the frames.
 '''
 if __name__ == "__main__":
-    if len(sys.argv) != 5:
-        print("Use: python3 video.py <stencil_binary> <video_path> <output_dir> <video name output>")
+    if len(sys.argv) != 6:
+        print("Use: python3 video.py <np mpi> <stencil_binary> <video_path> <output_dir> <video name output>")
         sys.exit(1)
 
-    stencil_binary = sys.argv[1]
-    video_path = sys.argv[2]
-    output_frames = os.path.join(sys.argv[3], "frames")
-    processed_frames = os.path.join(sys.argv[3], "processed_frames")
-    output_video = sys.argv[4]
+    global np 
+    np = sys.argv[1]
+    stencil_binary = sys.argv[2]
+    video_path = sys.argv[3]
+    output_frames = os.path.join(sys.argv[4], "frames")
+    processed_frames = os.path.join(sys.argv[4], "processed_frames")
+    output_video = sys.argv[5]
     max_frames = 1000#if the video has too much frames you can say how many you want to compute
                     #if you set a large number of frames it could be that all the video is going to be
                     #computed
