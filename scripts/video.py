@@ -130,7 +130,7 @@ if __name__ == "__main__":
     output_frames = os.path.join(sys.argv[3], "frames")
     processed_frames = os.path.join(sys.argv[3], "processed_frames")
     output_video = sys.argv[4]
-    max_frames = 500#if the video has too much frames you can say how many you want to compute
+    max_frames = 1000#if the video has too much frames you can say how many you want to compute
                     #if you set a large number of frames it could be that all the video is going to be
                     #computed
 

@@ -58,9 +58,9 @@ float compute_stencil(const Matrix matrix, const uint32_t offset)
 
     // For every element of the region store its value and calculate its weight
     float neighbors[region_size];
-    //#pragma omp parallel for num_threads(4) schedule(dynamic) private(curr, stencil_matrix) shared(neighbors)
     //this part of code is fast enough even withou paralellization, adding an omp pragma just adds
     //useless overhead which makes the execution slower
+    //#pragma omp parallel for num_threads(4) schedule(dynamic) private(curr, stencil_matrix) shared(neighbors)
     for (uint32_t i = 0; i < region_size; i++)
     {
         int32_t offsets[MAX_DIMS];

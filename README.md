@@ -35,13 +35,28 @@ A list of different stencils can be found in `src/patterns.h` while all differen
 ### Python scripts
 
 The folder `scripts/` contains some python scripts that can be used to perform various operations.
+
+### Image
 One of them is `image.py` which allows to apply the stencil computation to a provided image.
 
 ```
-./image.py <stencil_binary> <image> <output_directory>
+./image.py <stencil_binary> <image> <output_directory> [output log]
 ```
 
 The command above will save the resulting image in the specified `output_directory`.
+
+### Video
+
+`video.py` allows to apply the stencil computation to a video which is just a composition of images (frames).
+
+```
+./video.py <stencil_binary> <video_path> <output_dir> <video name output>
+```
+
+The command above will save the extracted frames and the computed ones in the specified `output_directory` and generate a new video with the name `video name output`.
+The new `video name` MUST contain also a proper `extension` such as mp4, mp3.
+
+Keep in mind that if the video has a large resolution and/or contains lot of frames it might require lot of computation and also space as it need to save a pair of images for each frame.
 
 ### Expand program
 
@@ -56,14 +71,9 @@ Don't forget to apply your new changes by running `make clean && make`.
 
 Contributors names and contact info
 
-Simone Rossi: [@simrossi](https://github.com/simrossi)
-Dorijan Di Zepp: [@najirod02](https://github.com/najirod02)
+Simone Rossi: [@simrossi](https://github.com/simrossi) [257777]
+Dorijan Di Zepp: [@najirod02](https://github.com/najirod02) [257827]
 
 ## License
 
 This project is licensed under the GPLv3 License - see the LICENSE file for details
-
-## Acknowledgments
-
-Inspiration, code snippets, etc.
-* [example](https://)
