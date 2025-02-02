@@ -1,6 +1,7 @@
 #include <omp.h>
 #include <stdint.h>
 #include <stdlib.h>
+#include <string.h>
 #include "common.h"
 #include "log.h"
 #include "sequential.h"
@@ -15,7 +16,8 @@ Matrix compute_sequential(const Matrix matrix)
     Matrix tmp = matrix;
 
     // Allocate temporary matrix data buffer
-    tmp.data = malloc(matrix.total_size * sizeof(float));
+    uint32_t total_bytes = matrix.total_size * sizeof(float);
+    tmp.data = malloc(total_bytes);
 
     double exec_time = 0;
     for (uint32_t i = 0; i < ITERATIONS; i++)
@@ -31,6 +33,9 @@ Matrix compute_sequential(const Matrix matrix)
 
         double time = get_time(timer);
         exec_time += time;
+
+        // Update new computed matrix
+        memcpy(matrix.data, tmp.data, total_bytes);
 
         // Log current iteration execution time
         log_write("Iteration: %u, Time: %.6f seconds\n", i, time);
