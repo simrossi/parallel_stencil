@@ -7,20 +7,40 @@ from PIL import Image
 binary = input_img = output_dir = None
 red_file = green_file = blue_file = None
 
-def main():
-    if len(sys.argv) != 4:
-        print("Usage: ./image.py <stencil binary> <input image> <output directory>")
+'''
+This script takes as input an image and applies to it the defined stencil.
+It will generate as output a new image, different from the previous one based on the structure
+and properties of the stencil used.
 
-    global binary, input_img, output_dir
-    binary = sys.argv[1];
-    input_img = sys.argv[2];
-    output_dir = sys.argv[3];
+It is important to use as input (if possible) square images as stencils generally assume that pixels
+have same proportions. When proportions are not uniform, the filter's operation could produce artifacts
+or noise because the dimension of the stencil doesn't correspond to the spacial structure of the image.
+'''
+def main():
+    if len(sys.argv) < 5:
+        print("Usage: ./image.py <np mpi> <stencil binary> <input image> <output directory> [output log]")
+        exit(0)
+
+    global np, binary, input_img, output_dir, log
+    np = sys.argv[1]
+    binary = sys.argv[2]
+    input_img = sys.argv[3]
+    output_dir = sys.argv[4]
+
+    if len(sys.argv) == 6:
+        log = sys.argv[5]
 
     imageToFiles()
     computeStencil()
     filesToImage()
 
 
+'''
+the function simply takes the input image and generates 3 file that correspond to the 
+3 channels (RGB).
+After extracting the channels, they are written as a linear vector so that the files
+can be used as input to the stencil program
+'''
 def imageToFiles():
     image = Image.open(input_img)
     image = image.convert('RGB')
@@ -58,12 +78,42 @@ def imageToFiles():
     write_channel(blue_file, b_channel)
 
 
+'''
+for each file generated starting from the input image, execute the stencil on each of them.
+if indicated, a log file will be populated
+'''
 def computeStencil():
-    subprocess.run([binary, '-i', red_file, '-o', red_file])
-    subprocess.run([binary, '-i', green_file, '-o',green_file])
-    subprocess.run([binary, '-i', blue_file, '-o',blue_file])
+    #execution of red file
+    params = ["mpiexec", "-np", np, binary, '-i', red_file, '-o', red_file]
+    #in the case a log file is defined, just append the new param
+    #to the params list
+    if len(sys.argv) == 6:
+        params.extend(['-l', log+"_r"])
+
+    subprocess.run(params)
+    
+    #execution of green file
+    params = ["mpiexec", "-np", np, binary, '-i', green_file, '-o', green_file]
+    
+    if len(sys.argv) == 6:
+        params.extend(['-l', log+"_g"])
+
+    subprocess.run(params)
+
+    #execution of blue file
+    params = ["mpiexec", "-np", np, binary, '-i', blue_file, '-o', blue_file]
+    
+    if len(sys.argv) == 6:
+        params.extend(['-l', log+"_b"])
+
+    subprocess.run(params)
 
 
+'''
+same process as imageToFiles just inverted.
+after applying the stencil to each channel file, the function merges the results
+by generating a new output image.
+'''
 def filesToImage():
     def read_channel(file_name):
         with open(file_name, 'r') as file:
