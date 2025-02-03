@@ -1,6 +1,5 @@
 #include <mpi.h>
 #include <omp.h>
-#include <omp.h>
 #include <stdint.h>
 #include <stdlib.h>
 #include <string.h>
@@ -32,9 +31,6 @@ Matrix compute_parallel(const Matrix matrix)
 
     if (rank == 0) {
         // Allocate temporary matrix data buffer
-        uint32_t total_bytes = matrix.total_size * sizeof(float);
-        tmp.data = malloc(total_bytes);
-        memcpy(tmp.data, matrix.data, total_bytes);
         uint32_t total_bytes = matrix.total_size * sizeof(float);
         tmp.data = malloc(total_bytes);
         memcpy(tmp.data, matrix.data, total_bytes);
@@ -75,12 +71,10 @@ Matrix compute_parallel(const Matrix matrix)
         for (uint32_t j = start; j < end; j++)
         {
             local_data[j - start] = compute_stencil(tmp, j);
-            local_data[j - start] = compute_stencil(tmp, j);
         }
 
         // Gather computed array data to the root process
         // Synchronize processes at the end of every iteration
-        MPI_Allgatherv(local_data, count, MPI_FLOAT, tmp.data, counts, starts, MPI_FLOAT, MPI_COMM_WORLD);
         MPI_Allgatherv(local_data, count, MPI_FLOAT, tmp.data, counts, starts, MPI_FLOAT, MPI_COMM_WORLD);
 
         if (rank == 0) {
