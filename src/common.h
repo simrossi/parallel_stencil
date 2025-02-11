@@ -8,7 +8,7 @@
 #endif
 
 #ifndef ITERATIONS
-#define ITERATIONS 20 // Number of iterations to compute
+#define ITERATIONS 10 // Number of iterations to compute
 #endif
 
 #endif

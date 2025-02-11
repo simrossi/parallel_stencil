@@ -5,10 +5,12 @@ from PIL import Image
 import sys
 import cv2
 
-'''
+"""
 extract the frames from the video getting as
 result a list of images
-'''
+"""
+
+
 def extract_frames(video_path, output_dir, max_frames):
     if not os.path.exists(output_dir):
         os.makedirs(output_dir)
@@ -28,9 +30,12 @@ def extract_frames(video_path, output_dir, max_frames):
     print(f"Extracted {frame_count} frames")
     return frame_count
 
-'''
+
+"""
 as each frame is an image, it is possible to apply the stencil on it
-'''
+"""
+
+
 def apply_stencil_to_frames(input_dir, output_dir, stencil_binary):
     if not os.path.exists(output_dir):
         os.makedirs(output_dir)
@@ -40,8 +45,9 @@ def apply_stencil_to_frames(input_dir, output_dir, stencil_binary):
         output_path = os.path.join(output_dir, frame_file)
         process_frame_with_stencil(input_path, output_path, stencil_binary)
 
+
 def process_frame_with_stencil(input_img, output_img, stencil_binary):
-    #in a similar way done for the images, we have to extract the 3 channels of each frame
+    # in a similar way done for the images, we have to extract the 3 channels of each frame
     image = Image.open(input_img).convert("RGB")
     width, height = image.size
 
@@ -53,17 +59,23 @@ def process_frame_with_stencil(input_img, output_img, stencil_binary):
             g_channel.append(g)
             b_channel.append(b)
 
-    #cycle in temporary channel files in order to save memory space
+    # cycle in temporary channel files in order to save memory space
     red_file, green_file, blue_file = "temp.red", "temp.green", "temp.blue"
     save_channel(red_file, r_channel, width, height)
     save_channel(green_file, g_channel, width, height)
     save_channel(blue_file, b_channel, width, height)
 
-    subprocess.run(["mpiexec", "-np", np, stencil_binary, "-i", red_file, "-o", red_file])
-    subprocess.run(["mpiexec", "-np", np, stencil_binary, "-i", green_file, "-o", green_file])
-    subprocess.run(["mpiexec", "-np", np, stencil_binary, "-i", blue_file, "-o", blue_file])
+    subprocess.run(
+        ["mpiexec", "-np", np, stencil_binary, "-i", red_file, "-o", red_file]
+    )
+    subprocess.run(
+        ["mpiexec", "-np", np, stencil_binary, "-i", green_file, "-o", green_file]
+    )
+    subprocess.run(
+        ["mpiexec", "-np", np, stencil_binary, "-i", blue_file, "-o", blue_file]
+    )
 
-    #reconstruct the image after applying the stencil
+    # reconstruct the image after applying the stencil
     new_image = reconstruct_image(red_file, green_file, blue_file, width, height)
     new_image.save(output_img)
 
@@ -71,10 +83,12 @@ def process_frame_with_stencil(input_img, output_img, stencil_binary):
     os.remove(green_file)
     os.remove(blue_file)
 
+
 def save_channel(file_name, channel_data, width, height):
     with open(file_name, "w") as file:
         file.write(f"{width} {height}\n")
         file.write(" ".join(map(str, channel_data)) + "\n")
+
 
 def reconstruct_image(red_file, green_file, blue_file, width, height):
     def read_channel(file_name):
@@ -91,27 +105,35 @@ def reconstruct_image(red_file, green_file, blue_file, width, height):
     image.putdata(pixels)
     return image
 
-'''
+
+"""
 do the inverse procedure of extracting the frames so, generate a new video
 from the new frames computed in a mp4 format
-'''
+"""
+
+
 def create_video_from_frames_ffmpeg(frame_dir, output_video, fps=30):
     frame_pattern = os.path.join(frame_dir, "frame_%03d.png")
-    
-    #FFmpeg comand to create videos
+
+    # FFmpeg comand to create videos
     command = [
-        'ffmpeg',
-        '-framerate', str(fps),
-        '-i', frame_pattern,
-        '-c:v', 'libx264',
-        '-pix_fmt', 'yuv420p',
-        output_video
+        "ffmpeg",
+        "-framerate",
+        str(fps),
+        "-i",
+        frame_pattern,
+        "-c:v",
+        "libx264",
+        "-pix_fmt",
+        "yuv420p",
+        output_video,
     ]
-    
+
     subprocess.run(command)
     print(f"Video generated: {output_video}")
 
-'''
+
+"""
 This script takes as input a video and applies to it the defined stencil.
 It will generate as output a new video, different from the previous one based on the structure
 and properties of the stencil used.
@@ -119,22 +141,24 @@ and properties of the stencil used.
 The idea is the same used for images so, it is important to use as input (if possible) square videos.
 When proportions are not uniform, the filter's operation could produce artifacts
 or noise because the dimension of the stencil doesn't correspond to the spacial structure of the frames.
-'''
+"""
 if __name__ == "__main__":
     if len(sys.argv) != 6:
-        print("Use: python3 video.py <np mpi> <stencil_binary> <video_path> <output_dir> <video name output>")
+        print(
+            "Use: python3 video.py <np mpi> <stencil_binary> <video_path> <output_dir> <video name output>"
+        )
         sys.exit(1)
 
-    global np 
+    global np
     np = sys.argv[1]
     stencil_binary = sys.argv[2]
     video_path = sys.argv[3]
     output_frames = os.path.join(sys.argv[4], "frames")
     processed_frames = os.path.join(sys.argv[4], "processed_frames")
     output_video = sys.argv[5]
-    max_frames = 1000#if the video has too much frames you can say how many you want to compute
-                    #if you set a large number of frames it could be that all the video is going to be
-                    #computed
+    max_frames = 1000  # if the video has too much frames you can say how many you want to compute
+    # if you set a large number of frames it could be that all the video is going to be
+    # computed
 
     print("Extraction of frames")
     extract_frames(video_path, output_frames, max_frames)
