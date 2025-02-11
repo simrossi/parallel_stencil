@@ -1,5 +1,5 @@
 CC:=mpicc
-CFLAGS:=-Wall -Wextra -fopenmp
+CFLAGS:=-std=c99 -Wall -Wextra -fopenmp
 LDFLAGS:=-lm
 SHELL:=/bin/bash
 PROCS:=4
