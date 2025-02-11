@@ -74,8 +74,8 @@ def plot_data(all_iterations_list, all_times_list, file_names):
     ax2.grid(True)
     
     # Position the legend outside the plot area
-    ax1.legend(loc='lower center', bbox_to_anchor=(0.5,-0.2), ncol=2)
-    ax2.legend(loc='lower center', bbox_to_anchor=(0.5,-0.2), ncol=2)
+    ax1.legend(loc='lower center', bbox_to_anchor=(0.5,-0.2), ncol=3)
+    ax2.legend(loc='lower center', bbox_to_anchor=(0.5,-0.2), ncol=3)
 
     plt.tight_layout()
 

@@ -1,15 +1,20 @@
 #include <omp.h>
+#include <stdbool.h>
 #include <stdint.h>
+#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include "common.h"
 #include "log.h"
 #include "sequential.h"
 #include "stencil.h"
+#include "parser.h"
 #include "timer.h"
 #include "types.h"
 
 extern uint32_t num_threads;
+extern const char * save_intermediate;
+extern const bool binary;
 
 Matrix compute_sequential(const Matrix matrix)
 {
@@ -25,7 +30,6 @@ Matrix compute_sequential(const Matrix matrix)
         clock_t timer = init_timer();
 
         // For every element calculate the new value
-        #pragma omp parallel for num_threads(num_threads) schedule(guided)
         for (uint32_t j = 0; j < matrix.total_size; j++)
         {
             tmp.data[j] = compute_stencil(matrix, j);
@@ -39,6 +43,13 @@ Matrix compute_sequential(const Matrix matrix)
 
         // Log current iteration execution time
         log_write("Iteration: %u, Time: %.6f seconds\n", i, time);
+
+        //output intermediate iteration if save_intermediate is set to true
+        if(save_intermediate){
+            char outputfile[100];
+            sprintf(outputfile, "%s/output-iteration-%u", save_intermediate, i);
+            binary ? write_binfile(tmp, outputfile) : write_file(tmp, outputfile);
+        }
     }
     log_write("Total execution time: %.6f seconds\n", exec_time);
 

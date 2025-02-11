@@ -13,11 +13,12 @@ extern uint32_t num_threads;
 void print_matrix_rec(const Matrix matrix, const uint32_t depth);
 
 // Initialize program and parse provided arguments
-void init(const int32_t argc, char **argv, char **input_file, char **output_file, char **log_file, bool *binary)
+void init(const int32_t argc, char **argv, char **input_file, char **output_file, char **log_file, char **save_intermediate, bool *binary)
 {
     *input_file = NULL;
     *output_file = NULL;
     *log_file = NULL;
+    *save_intermediate = NULL;
     *binary = false;
 
     // Define the long options
@@ -26,6 +27,7 @@ void init(const int32_t argc, char **argv, char **input_file, char **output_file
         {"output-file", required_argument, 0, 'o'},
         {"log-file", required_argument, 0, 'l'},
         {"threads", required_argument, 0, 't'},
+        {"save-intermediate", required_argument, 0, 's'},
         {"binary", no_argument, 0, 'b'},
         {"help", no_argument, 0, 'h'},
         {0, 0, 0, 0} // End of options
@@ -34,7 +36,7 @@ void init(const int32_t argc, char **argv, char **input_file, char **output_file
     while (true)
     {
         int32_t option_index = 0;
-        int32_t opt = getopt_long(argc, argv, "i:o:l:t:bh", long_options, &option_index);
+        int32_t opt = getopt_long(argc, argv, "i:o:l:t:s:bh", long_options, &option_index);
 
         if (opt == -1) {
             break;
@@ -54,6 +56,9 @@ void init(const int32_t argc, char **argv, char **input_file, char **output_file
             case 't':
                 num_threads = atoi(optarg);
                 break;
+            case 's':
+                *save_intermediate = optarg;
+                break;
             case 'b':
                 *binary = true;
                 break;
@@ -66,6 +71,7 @@ void init(const int32_t argc, char **argv, char **input_file, char **output_file
                 printf("  -o, --output-file <file>  Specify the output file\n");
                 printf("  -l, --log-file <file>     Specify the log file\n");
                 printf("  -t, --threads <value>     Specify the number of threads\n");
+                printf("  -s, --save-intermediate <folder> Specify output folder for intermediate iterations\n");
                 printf("  -b, --binary              Use binary format\n");
                 printf("  -h, --help                Print this help message\n");
                 exit(0);

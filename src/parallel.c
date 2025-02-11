@@ -1,16 +1,19 @@
 #include <mpi.h>
 #include <omp.h>
+#include <stdbool.h>
 #include <stdint.h>
 #include <stdlib.h>
+#include <stdio.h>
 #include <string.h>
 #include "common.h"
 #include "log.h"
+#include "parser.h"
 #include "stencil.h"
 #include "types.h"
 
 extern uint32_t num_threads;
-
-extern uint32_t num_threads;
+extern const char *save_intermediate;
+extern const bool binary;
 
 Matrix compute_parallel(const Matrix matrix)
 {
@@ -83,6 +86,13 @@ Matrix compute_parallel(const Matrix matrix)
 
             // Log current iteration execution time
             log_write("Iteration: %u, Time: %.6f seconds\n", i, time);
+
+            //output intermediate iteration if save_intermediate is set to true
+            if(save_intermediate){
+                char outputfile[100];
+                sprintf(outputfile, "%s/output-iteration-%u", save_intermediate, i);
+                binary ? write_binfile(tmp, outputfile) : write_file(tmp, outputfile);
+            }
         }
     }
 
