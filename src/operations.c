@@ -15,7 +15,6 @@ float avg(const float *elements, const uint32_t num) {
   return sum(elements, num) / num;
 }
 
-// To use with the conways stencil to simulate Conway's game of life
 float conways_gol(const float *elements, const uint32_t num) {
   bool alive = false;
   float neigh = sum(elements, num);

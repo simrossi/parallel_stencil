@@ -16,8 +16,6 @@ It is important to use as input (if possible) square images as stencils generall
 have same proportions. When proportions are not uniform, the filter's operation could produce artifacts
 or noise because the dimension of the stencil doesn't correspond to the spacial structure of the image.
 """
-
-
 def main():
     if len(sys.argv) < 5:
         print(
@@ -38,15 +36,12 @@ def main():
     computeStencil()
     filesToImage()
 
-
 """
 the function simply takes the input image and generates 3 file that correspond to the 
 3 channels (RGB).
 After extracting the channels, they are written as a linear vector so that the files
 can be used as input to the stencil program
 """
-
-
 def imageToFiles():
     image = Image.open(input_img)
     image = image.convert("RGB")
@@ -83,13 +78,10 @@ def imageToFiles():
     write_channel(green_file, g_channel)
     write_channel(blue_file, b_channel)
 
-
 """
 for each file generated starting from the input image, execute the stencil on each of them.
 if indicated, a log file will be populated
 """
-
-
 def computeStencil():
     # execution of red file
     params = ["mpiexec", "-np", np, binary, "-i", red_file, "-o", red_file]
@@ -116,14 +108,11 @@ def computeStencil():
 
     subprocess.run(params)
 
-
 """
 same process as imageToFiles just inverted.
 after applying the stencil to each channel file, the function merges the results
 by generating a new output image.
 """
-
-
 def filesToImage():
     def read_channel(file_name):
         with open(file_name, "r") as file:
@@ -152,7 +141,6 @@ def filesToImage():
 
     image.putdata(pixels)
     image.save(os.path.join(output_dir, input_img))
-
 
 if __name__ == "__main__":
     main()

@@ -6,7 +6,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-// Compute indices given an absolute offset
 void offset_to_indices(const Matrix matrix, uint32_t offset,
                        uint32_t *indices) {
   for (uint32_t i = 0; i < matrix.dimensions; i++) {
@@ -17,7 +16,6 @@ void offset_to_indices(const Matrix matrix, uint32_t offset,
   }
 }
 
-// Compute absolute offset given the indices for every dimension
 uint32_t indices_to_offset(const Matrix matrix, const uint32_t *indices) {
   uint32_t offset = 0;
 
@@ -35,7 +33,6 @@ uint32_t indices_to_offset(const Matrix matrix, const uint32_t *indices) {
   return offset;
 }
 
-// Check whether the provided indices are out of bounds
 bool is_outside(const Matrix matrix, const int32_t *indices) {
   for (uint32_t i = 0; i < matrix.dimensions; i++) {
     const int32_t index = indices[i];
@@ -48,7 +45,6 @@ bool is_outside(const Matrix matrix, const int32_t *indices) {
   return false;
 }
 
-// Calculate closest indices belonging to the matrix
 void closest_point(const Matrix matrix, const int32_t *indices,
                    uint32_t *closest_indices) {
   for (uint32_t i = 0; i < matrix.dimensions; i++) {
@@ -64,7 +60,6 @@ void closest_point(const Matrix matrix, const int32_t *indices,
   }
 }
 
-// Calculate the offsets between two points
 void calculate_offsets(const Matrix matrix, const uint32_t *center,
                        const uint32_t *point, int32_t *offsets) {
   for (uint32_t i = 0; i < matrix.dimensions; i++) {

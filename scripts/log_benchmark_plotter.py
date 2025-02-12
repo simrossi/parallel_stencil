@@ -3,7 +3,6 @@ import re
 import sys
 import matplotlib.pyplot as plt
 
-
 def extract_time(filename):
     with open(filename, "r") as file:
         for line in file:
@@ -14,19 +13,15 @@ def extract_time(filename):
                     raise ValueError(f"Malformed line in {filename}: {line.strip()}")
     raise ValueError(f"Total time not found in log {filename}.")
 
-
 def extract_num_processes(filename):
     match = re.search(r"n(\d+)", filename)
     return int(match.group(1)) if match else None
 
-
 def calculate_speedup(serial_time, parallel_times):
     return {np: serial_time / time for np, time in parallel_times.items()}
 
-
 def calculate_efficiency(speedups):
     return {np: sp / np for np, sp in speedups.items()}
-
 
 def plot_speedup_and_efficiency(speedups, efficiencies=None):
     num_processes = sorted(speedups.keys())
@@ -77,12 +72,11 @@ def plot_speedup_and_efficiency(speedups, efficiencies=None):
 
     plt.show()
 
-
 def main():
     if len(sys.argv) < 2:
         # required at least the sequential log
         print(
-            "Usage: python3 script.py log_sequential log_parallel_nX log_parallel_nY ... [-e]"
+            "Usage: python3 log_benchmakr_plotter.py log_sequential log_parallel_nX log_parallel_nY ... [-e]"
         )
         sys.exit(0)
 
@@ -116,7 +110,6 @@ def main():
         plot_speedup_and_efficiency(speedups, efficiencies)
     else:
         plot_speedup_and_efficiency(speedups)
-
 
 if __name__ == "__main__":
     main()

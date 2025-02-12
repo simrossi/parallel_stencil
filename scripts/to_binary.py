@@ -2,7 +2,6 @@
 import struct
 import sys
 
-
 def main():
     if len(sys.argv) != 3:
         print("Usage: ./to_binary.py <text_input> <binary_output>")
@@ -38,7 +37,6 @@ def main():
         # Write data
         for i in range(total_size):
             file.write(struct.pack("f", data[i]))  # f: 32-bit float
-
 
 if __name__ == "__main__":
     main()

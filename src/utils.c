@@ -8,11 +8,10 @@
 #include <string.h>
 #include <unistd.h>
 
-extern uint32_t num_threads;
+extern uint32_t num_threads;//used in openmp pragma
 
 void print_matrix_rec(const Matrix matrix, const uint32_t depth);
 
-// Initialize program and parse provided arguments
 void init(const int32_t argc, char **argv, char **input_file,
           char **output_file, char **log_file, char **save_intermediate,
           bool *binary) {

@@ -3,6 +3,7 @@
 #include "parser.h"
 #include "stencil.h"
 #include "types.h"
+#include "parallel.h"
 #include <mpi.h>
 #include <omp.h>
 #include <stdbool.h>
@@ -11,9 +12,9 @@
 #include <stdlib.h>
 #include <string.h>
 
-extern uint32_t num_threads;
-extern const char *save_intermediate;
-extern const bool binary;
+extern uint32_t num_threads;//used in openmp pragma
+extern const char *save_intermediate;//if set, save current matrix value after each iteration
+extern const bool binary;//if set, save the output in binary format
 
 Matrix compute_parallel(const Matrix matrix) {
   Matrix tmp = matrix;
@@ -87,7 +88,7 @@ Matrix compute_parallel(const Matrix matrix) {
 
       // output intermediate iteration if save_intermediate is set to true
       if (save_intermediate) {
-        char outputfile[256];
+        char outputfile[INTERMEDIATE_NAME_DIM];
 
         sprintf(outputfile, "%s/iteration%u", save_intermediate, i);
         binary ? write_binfile(tmp, outputfile) : write_file(tmp, outputfile);

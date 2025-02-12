@@ -6,20 +6,58 @@ Parallel implementation of stencil computations, also known as ISLs, using OpenM
 
 This repository contains the project for the UniTN HPC course for a.y. 2024-2025.
 
+Table of contents:
+- [External resources](#external-resources)
+- [Getting started](#getting-started)
+- [Compile](#compile)
+- [Executing program](#executing-program)
+- [Python scripts](#python-scripts)
+- [Expand program](#expand-program)
+- [Authors](#authors)
+
+## External resources
+In order to keep the repository simple and clear, all the results obtained from testing, such as logs and output images, are stored in a dedicated Drive folder that can be visited at the following [link](https://drive.google.com/drive/folders/1WYopG-qn7wH-KGPl-lkGrmz7BLWW1qOd?usp=sharing).
+
 ## Getting Started
-
-### Dependencies
-
-* OpenMPI
-* OpenMP (optional)
-* Matplotlib
-* OpenCV
 
 ### Installing
 
-Clone the repository and compile with Make
+Clone the repository
+
 ```
 git clone https://github.com/simrossi/parallel_stencil
+```
+
+Before building the project and test it, make sure that you have all the dependencies installed.
+
+### C - dependencies
+* OpenMPI
+* OpenMP (optional)
+
+To install everything simply type
+```bash
+sudo apt update
+sudo apt install openmpi-bin libopenmpi-dev
+```
+### Python - dependencies
+* Matplotlib
+* OpenCV
+* Pygame
+
+To be sure that every Python dependency is installed simply type:
+```bash
+pip check
+```
+
+or simply give as input the `requirements.txt` file to pip. It will automatically download all necessary dependencies that are not already installed.
+```bash
+pip install -r requirements.txt
+```
+
+### Compile
+After installing all the dependencies, compile the project with Make as it follows:
+
+```
 cd parallel_stencil
 make
 ```
@@ -53,7 +91,7 @@ A list of different stencils can be found in `src/patterns.h` while all differen
 
 The folder `scripts/` contains some python scripts that can be used to perform various operations.
 
-### Image
+#### Image
 One of them is `image.py` which allows to apply the stencil computation to a provided image.
 
 ```
@@ -62,7 +100,7 @@ One of them is `image.py` which allows to apply the stencil computation to a pro
 
 The command above will save the resulting image in the specified `output_directory`.
 
-### Video
+#### Video
 
 `video.py` allows to apply the stencil computation to a video which is just a composition of images (frames).
 
@@ -88,6 +126,32 @@ Keep in mind that if the video has a large resolution and/or contains lot of fra
 </p>
 
 The folder `outputs` contains the examples showed above and other image / video outputs generates by applying ISLs.
+
+#### ISL Simulation
+It is possible to save the output matrix of each iteration and generate an animation that simulates the evolution of the input matrix.
+
+First of all it is important to execute the binary file with the specific parameter `-s`.
+```
+./stencil -i <input_file> -o <output_file> -s <results_folder>
+```
+The folder, which must be created prior, will be filled with the matrix obtained at each iteration.
+
+You can then simply execute the python script
+```
+python3 isl_simulation.py <input_file> <results_folder>
+```
+
+#### Time and benchmark plotters
+Both scripts have been used for the analysis of the testing phase as it allows to compare the execution times and the efficiency of different configurations.
+More precisely:
+- time plotter compares the execution times based on the logs generated
+- benchmark allows the analysis of both speedup and efficiency of the different configurations tested
+
+```
+python3 log_time_plotter.py <log file1> <log file2> ...
+
+python3 log_benchmark_plotter.py log_sequential log_parallel_nX log_parallel_nY ... [-e]
+```
 
 ### Expand program
 

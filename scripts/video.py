@@ -9,8 +9,6 @@ import cv2
 extract the frames from the video getting as
 result a list of images
 """
-
-
 def extract_frames(video_path, output_dir, max_frames):
     if not os.path.exists(output_dir):
         os.makedirs(output_dir)
@@ -30,12 +28,9 @@ def extract_frames(video_path, output_dir, max_frames):
     print(f"Extracted {frame_count} frames")
     return frame_count
 
-
 """
 as each frame is an image, it is possible to apply the stencil on it
 """
-
-
 def apply_stencil_to_frames(input_dir, output_dir, stencil_binary):
     if not os.path.exists(output_dir):
         os.makedirs(output_dir)
@@ -44,7 +39,6 @@ def apply_stencil_to_frames(input_dir, output_dir, stencil_binary):
         input_path = os.path.join(input_dir, frame_file)
         output_path = os.path.join(output_dir, frame_file)
         process_frame_with_stencil(input_path, output_path, stencil_binary)
-
 
 def process_frame_with_stencil(input_img, output_img, stencil_binary):
     # in a similar way done for the images, we have to extract the 3 channels of each frame
@@ -83,12 +77,10 @@ def process_frame_with_stencil(input_img, output_img, stencil_binary):
     os.remove(green_file)
     os.remove(blue_file)
 
-
 def save_channel(file_name, channel_data, width, height):
     with open(file_name, "w") as file:
         file.write(f"{width} {height}\n")
         file.write(" ".join(map(str, channel_data)) + "\n")
-
 
 def reconstruct_image(red_file, green_file, blue_file, width, height):
     def read_channel(file_name):
@@ -105,13 +97,10 @@ def reconstruct_image(red_file, green_file, blue_file, width, height):
     image.putdata(pixels)
     return image
 
-
 """
 do the inverse procedure of extracting the frames so, generate a new video
 from the new frames computed in a mp4 format
 """
-
-
 def create_video_from_frames_ffmpeg(frame_dir, output_video, fps=30):
     frame_pattern = os.path.join(frame_dir, "frame_%03d.png")
 
@@ -131,7 +120,6 @@ def create_video_from_frames_ffmpeg(frame_dir, output_video, fps=30):
 
     subprocess.run(command)
     print(f"Video generated: {output_video}")
-
 
 """
 This script takes as input a video and applies to it the defined stencil.

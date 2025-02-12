@@ -10,20 +10,15 @@ import sys
 """
 a simple function that reads the number of rows and columns and the cells' values
 """
-
-
 def read_values(file_path):
     with open(file_path, "r") as file:
         rows, cols = map(int, file.readline().split())
         values = list(map(float, file.read().split()))
     return rows, cols, values[: rows * cols]
 
-
 """
 handler for slider to visit specific iteration
 """
-
-
 def update_manual(val):
     global playing
 
@@ -45,12 +40,9 @@ def update_manual(val):
     cbar.update_normal(img)
     ax.set_title(f"Simulation - iteration {index}")
 
-
 """
 handler for automatic animation scale
 """
-
-
 def update_auto(frame):
     img.set_array(values_grids[frame])
 
@@ -64,12 +56,9 @@ def update_auto(frame):
     ax.set_title(f"Simulation - iteration {frame}")
     slider.set_val(frame)  # to sync slider with auto play
 
-
 """
 handler for button player
 """
-
-
 def toggle_animation(event):
 
     global playing
@@ -83,12 +72,9 @@ def toggle_animation(event):
 
     playing = not playing
 
-
 """
 handler for scale mode
 """
-
-
 def toggle_scale(event):
     global use_global_scale
 
@@ -108,9 +94,7 @@ def toggle_scale(event):
     cbar.update_normal(img)
     ax.set_title(f"Simulation - iteration {index}")
 
-
 ## ---------------------- MAIN ---------------------- ##
-
 if len(sys.argv) < 3:
     print("Usage: ./isl_simulation.py <input> <iterations folder>")
     exit(0)

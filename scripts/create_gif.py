@@ -6,7 +6,6 @@ import glob
 import numpy as np
 from PIL import Image
 
-
 def load(file):
     with open(file, "r") as inputfile:
         global rows, cols
@@ -20,7 +19,6 @@ def load(file):
             matrix.append(row)
 
     return matrix
-
 
 def matrix_to_image(matrix):
     # Normalize image to 0-255 range
@@ -37,7 +35,6 @@ def matrix_to_image(matrix):
     # Create PIL Image
     matrix = np.array(matrix, dtype=np.uint8)
     return Image.fromarray(matrix, mode="L")
-
 
 def main():
     argc = len(sys.argv)
@@ -73,7 +70,6 @@ def main():
         append_images=frames[1:],
         duration=200,
     )
-
 
 if __name__ == "__main__":
     main()

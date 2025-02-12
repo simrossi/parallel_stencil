@@ -2,7 +2,6 @@
 import struct
 import sys
 
-
 def main():
     if len(sys.argv) != 3:
         print("Usage: ./from_binary.py <binary_input> <text_output>")
@@ -37,7 +36,6 @@ def main():
 
         # Write data
         file.write(" ".join([f"{value:g}" for value in data]) + "\n")
-
 
 if __name__ == "__main__":
     main()

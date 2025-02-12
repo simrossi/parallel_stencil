@@ -7,8 +7,6 @@ import sys
 given the log file, read each line and create a new entry to be plotted later
 we generate 2 entries, one for cumulative times and one that represents each single iteration time
 """
-
-
 def parse_log(file_path):
     all_iterations = []
     all_times = []
@@ -41,13 +39,10 @@ def parse_log(file_path):
 
     return all_iterations, all_times
 
-
 """
 given the list of all files and their iterations and times list,
 generate 2 plots to make a comparison between al n executions
 """
-
-
 def plot_data(all_iterations_list, all_times_list, file_names):
     # subplot for 2 plots
     fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(17, 8))
@@ -107,7 +102,6 @@ def plot_data(all_iterations_list, all_times_list, file_names):
 
     plt.show()
 
-
 def main():
     if len(sys.argv) < 2:
         # require at least 1 log as input
@@ -135,7 +129,6 @@ def main():
         plot_data(all_iterations_list, all_times_list, file_names)
     else:
         print("No data found inside the logs")
-
 
 if __name__ == "__main__":
     main()

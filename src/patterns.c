@@ -97,7 +97,6 @@ Stencil gabor_kernel() {
       .dimensions = 2, .sizes = {3, 3}, .center = {1, 1}, .data = data};
 }
 
-// To use with the conways_gol stencil to simulate Conway's game of life
 Stencil conways() {
   Stencil stencil = square_2d(1);
   stencil.data[4] = 0.5f;

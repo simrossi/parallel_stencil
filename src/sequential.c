@@ -43,7 +43,7 @@ Matrix compute_sequential(const Matrix matrix) {
 
     // output intermediate iteration if save_intermediate is set to true
     if (save_intermediate) {
-      char outputfile[256];
+      char outputfile[INTERMEDIATE_NAME_DIM];
 
       sprintf(outputfile, "%s/iteration%u", save_intermediate, i);
       binary ? write_binfile(tmp, outputfile) : write_file(tmp, outputfile);

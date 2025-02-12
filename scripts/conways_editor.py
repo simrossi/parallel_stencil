@@ -15,7 +15,6 @@ pygame.display.set_caption("Conways Game Of Life Editor")
 rows = cols = 0
 matrix = []
 
-
 def load(file):
     with open(file, "r") as inputfile:
         global rows, cols
@@ -27,7 +26,6 @@ def load(file):
             row = [val != 0 for val in values[i : i + cols]]
             matrix.append(row)
 
-
 def save(file):
     with open(file, "w") as outputfile:
         outputfile.write(f"{rows} {cols}\n")
@@ -36,7 +34,6 @@ def save(file):
         for row in matrix:
             values.extend("1" if cell else "0" for cell in row)
         outputfile.write(" ".join(values))
-
 
 def draw_matrix():
     screen.fill(WHITE)
@@ -52,7 +49,6 @@ def draw_matrix():
 
     pygame.display.flip()
 
-
 def get_cell_position(mouse_pos):
     x, y = mouse_pos
 
@@ -64,7 +60,6 @@ def get_cell_position(mouse_pos):
         if 0 <= row < rows and 0 <= col < cols:
             return row, col
     return None
-
 
 def main():
     if len(sys.argv) != 2:
@@ -92,7 +87,6 @@ def main():
     finally:
         pygame.quit()
         sys.exit()
-
 
 if __name__ == "__main__":
     main()
