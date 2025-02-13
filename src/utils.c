@@ -13,8 +13,8 @@ extern uint32_t num_threads;//used in openmp pragma
 void print_matrix_rec(const Matrix matrix, const uint32_t depth);
 
 void init(const int32_t argc, char **argv, char **input_file,
-          char **output_file, char **log_file, char **save_intermediate,
-          bool *binary) {
+          char **output_file, char **log_file, uint32_t *iterations,
+          char **save_intermediate, bool *binary) {
   *input_file = NULL;
   *output_file = NULL;
   *log_file = NULL;
@@ -27,6 +27,7 @@ void init(const int32_t argc, char **argv, char **input_file,
       {"output-file", required_argument, 0, 'o'},
       {"log-file", required_argument, 0, 'l'},
       {"threads", required_argument, 0, 't'},
+      {"iterations", required_argument, 0, 'n'},
       {"save-intermediate", required_argument, 0, 's'},
       {"binary", no_argument, 0, 'b'},
       {"help", no_argument, 0, 'h'},
@@ -36,7 +37,7 @@ void init(const int32_t argc, char **argv, char **input_file,
   while (true) {
     int32_t option_index = 0;
     int32_t opt =
-        getopt_long(argc, argv, "i:o:l:t:s:bh", long_options, &option_index);
+        getopt_long(argc, argv, "i:o:l:t:n:s:bh", long_options, &option_index);
 
     if (opt == -1) {
       break;
@@ -55,6 +56,9 @@ void init(const int32_t argc, char **argv, char **input_file,
     case 't':
       num_threads = atoi(optarg);
       break;
+    case 'n':
+      *iterations = atoi(optarg);
+      break;
     case 's':
       *save_intermediate = optarg;
       break;
@@ -65,12 +69,13 @@ void init(const int32_t argc, char **argv, char **input_file,
     case '?':
       // Print help message
       printf("Usage: program -i <input_file> -o <output_file> [-l <log_file>] "
-             "[-t <num_threads>] [-s <folder>] [-b]\n");
+             "[-t <num_threads>] [-n <iterations>] [-s <folder>] [-b]\n");
       printf("Options:\n");
       printf("  -i, --input-file <file>   Specify the input file\n");
       printf("  -o, --output-file <file>  Specify the output file\n");
       printf("  -l, --log-file <file>     Specify the log file\n");
       printf("  -t, --threads <value>     Specify the number of threads\n");
+      printf("  -n, --iterations <value>  Specify the number of iterations\n");
       printf("  -s, --save-intermediate <folder> Specify output folder for "
              "intermediate iterations\n");
       printf("  -b, --binary              Use binary format\n");

@@ -16,7 +16,7 @@ extern uint32_t num_threads;
 extern const char *save_intermediate;
 extern const bool binary;
 
-Matrix compute_sequential(const Matrix matrix) {
+Matrix compute_sequential(const Matrix matrix, const uint32_t iterations) {
   Matrix tmp = matrix;
 
   // Allocate temporary matrix data buffer
@@ -24,7 +24,7 @@ Matrix compute_sequential(const Matrix matrix) {
   tmp.data = malloc(total_bytes);
 
   double exec_time = 0;
-  for (uint32_t i = 0; i < ITERATIONS; i++) {
+  for (uint32_t i = 0; i < iterations; i++) {
     clock_t timer = init_timer();
 
     // For every element calculate the new value

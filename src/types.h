@@ -9,7 +9,7 @@
  * @param total_size size of contiguous buffer
  * @param dimensions matrix's number of dimensions
  * @param sizes list of the sizes of each dimension
- * @param submat_sizes number of data stored on each dimension
+ * @param submat_sizes size of each submatrix for each dimension
  * @param data pointer to contiguous buffer
  */
 typedef struct {

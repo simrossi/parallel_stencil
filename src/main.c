@@ -18,11 +18,12 @@ char *save_intermediate = NULL;
 bool binary = false;
 
 int32_t main(int32_t argc, char **argv) {
+  uint32_t iterations = ITERATIONS; // Number of iterations
   char *input_file = NULL;
   char *output_file = NULL;
   char *log_file = NULL;
 
-  init(argc, argv, &input_file, &output_file, &log_file, &save_intermediate,
+  init(argc, argv, &input_file, &output_file, &log_file, &iterations, &save_intermediate,
        &binary);
   log_init(log_file);
 
@@ -32,9 +33,9 @@ int32_t main(int32_t argc, char **argv) {
   init_stencil(stencil, avg);
 
 #ifndef PARALLEL
-  matrix = compute_sequential(matrix);
+  matrix = compute_sequential(matrix, iterations);
 #else
-  matrix = compute_parallel(matrix);
+  matrix = compute_parallel(matrix, iterations);
 #endif
 
   // print_matrix(matrix);

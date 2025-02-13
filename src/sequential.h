@@ -9,8 +9,9 @@
 /**
  * executes the sequential computation of the ISL
  * @param matrix data structure that represents the matrix used in ISL
+ * @param iterations number of iterations to compute
  * @return the new matrix obtained from stencil iteration
  */
-Matrix compute_sequential(const Matrix matrix);
+Matrix compute_sequential(const Matrix matrix, const uint32_t iterations);
 
 #endif

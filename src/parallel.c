@@ -16,7 +16,7 @@ extern uint32_t num_threads;//used in openmp pragma
 extern const char *save_intermediate;//if set, save current matrix value after each iteration
 extern const bool binary;//if set, save the output in binary format
 
-Matrix compute_parallel(const Matrix matrix) {
+Matrix compute_parallel(const Matrix matrix, const uint32_t iterations) {
   Matrix tmp = matrix;
   int32_t procs, rank;
 
@@ -65,7 +65,7 @@ Matrix compute_parallel(const Matrix matrix) {
   float *local_data = malloc(count * sizeof(float));
 
   double exec_time = 0;
-  for (uint32_t i = 0; i < ITERATIONS; i++) {
+  for (uint32_t i = 0; i < iterations; i++) {
     double start_time = MPI_Wtime();
 
 // For every element calculate the new value
