@@ -138,7 +138,7 @@ Other python scripts where developed.
 
 ##### Conway's game of life
 <p style="display:flex; justify-content: space-around">
-	<img src="./outputs/conways_gol.gif"/>
+	<img src="./outputs/conways_gol.gif" width="380"/>
 </p>
 
 The folder `outputs` contains the examples showed above and other image / video outputs generates by applying ISLs.
